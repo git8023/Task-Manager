@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.yong.tm.dao.ModuleDao">
+    
+    <!-- 模块结果映射 -->
+    <resultMap type="module" id="mappingOfModule">
+        <id     column="id"             property="id"           />
+        <result column="name"           property="name"         />
+        <result column="created_date"   property="createdDate"  />
+        <result column="note"           property="note"         />
+        <result column="status"         property="status"       />
+        <association property="createdBy" javaType="user">
+            <result column="created_by" property="account"/>
+        </association>
+        <association property="project" javaType="project">
+            <result column="project_id"     property="id"       />
+            <result column="project_name"   property="name"     />
+        </association>
+    </resultMap>
+    
+    <!-- 指定项目ID查询模块列表 -->
+    <select id="selectByProjectId" parameterType="int" resultMap="mappingOfModule">
+        SELECT
+            module.id,
+            module.`name`,
+            module.project_id,
+            module.created_date,
+            module.created_by,
+            module.note,
+            module.`status`
+        FROM
+            module
+        WHERE
+            module.project_id = #{projectId}
+    </select>
+    
+    <!-- 插入模块 -->
+    <insert id="insert">
+        INSERT INTO module (
+            id, `name`, project_id, created_date, created_by, note, `STATUS` 
+        ) VALUES (
+            NULL,
+            #{module.name},
+            #{module.project.id},
+            #{module.createdDate},
+            #{module.createdBy.account},
+            #{module.note},
+            #{module.status}
+        )
+    </insert>
+    
+    <!-- 更新模块信息 -->
+    <update id="updateById">
+        UPDATE 
+            module
+        SET
+            id = #{id}
+            <if test="module.name != null and module.name != ''">
+                ,`name` = #{module.name}
+            </if>
+            <if test="module.project != null and module.project.id != null">
+                ,project_id = #{module.project.id}
+            </if>
+            <if test="module.createdDate != null">
+                ,created_date = #{module.createdDate}
+            </if>
+            <if test="module.createdBy != null and module.createdBy.account != null and module.createdBy.account != ''">
+                ,created_by = #{module.createdBy.account}
+            </if>
+            <if test="module.note != null and module.note != ''">
+                ,note = #{module.note}
+            </if>
+            <if test="module.status != null">
+                ,`status` = #{module.status}
+            </if>
+        WHERE
+            id = #{id}
+    </update>
+    
+    <!-- 指定模块ID查询模块详情 -->
+    <select id="selectById" parameterType="int"  resultMap="mappingOfModule">
+        SELECT
+            module.id,
+            module.`name`,
+            module.project_id,
+            project.`name` project_name,
+            module.created_date,
+            module.created_by,
+            module.note,
+            module.`status`
+        FROM
+            module
+        INNER JOIN project ON module.project_id = project.id
+        WHERE
+            module.id = #{moduleId}
+    </select>
+    
+    <!-- 查询与模块ID关联的用户列表 -->
+    <select id="selectUsersByModuleId" parameterType="int" resultMap="org.yong.tm.dao.UserDao.userMap">
+        SELECT 
+            `user`.account,
+            `user`.`name`,
+            `user`.identity
+        FROM 
+            `user`
+        INNER JOIN user_task ON `user`.account = user_task.performer
+        INNER JOIN task ON user_task.task_id = task.id
+        WHERE
+            task.module_id = #{moduleId}
+    </select>
+    
+</mapper>

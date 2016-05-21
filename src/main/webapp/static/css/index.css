@@ -1,0 +1,9 @@
+@CHARSET "UTF-8";
+body, div, p, * {margin:0;padding:0}
+html,body {width:100%;height:100%;}
+body {background-image:url("../image/hm_bg.jpg"); background-repeat:no-repeat;background-size:100%;background-color:#E8F2FE;}
+#login_form {margin:0 auto; width:500px; padding-top:15%;}
+#login_form .form_border {background-color:#E8F2FE;}
+#login_form form {padding:15px 39px;}
+#login_form form .err_ipt {border:1px solid #F00;}
+#login_form .title {padding: 4px 0px 4px 20px; font-weight: bold; font-size: 28px; margin-bottom: 10px;}

@@ -1,0 +1,66 @@
+@CHARSET "UTF-8";
+
+.pg_container * {
+	/* 	border: 1px solid #F00; */
+	
+}
+
+.pg_container {height:40px; display:inline-block;}
+
+.pg_container .pg_size,
+.pg_container .pg_btn, 
+.pg_container .pg_nan,
+.pg_container select,
+.pg_container input {
+	height: 100%;
+	outline: none;
+	border: none;
+}
+
+.pg_container .pg_size,
+.pg_container .pg_btn, 
+.pg_container .pg_nan,
+.pg_container div {
+	display: inline-block;
+	border: 1px solid #EEE;
+/* 	line-height: 40px; */
+}
+
+.pg_container .pg_nan {
+	border: none;
+}
+
+.pg_container .pg_size {
+	float: left;
+}
+
+.pg_container .pg_btn, 
+.pg_container .pg_nan {
+	margin-left: -1px;
+	/* 禁止选中 */
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
+	/* /禁止选中 */
+}
+
+.pg_container .pg_btn, 
+.pg_container .pg_nan,
+.pg_container select,
+.pg_container input {
+    padding: 0 15px;
+}
+
+.pg_container .pg_btn {
+	cursor: pointer;
+}
+
+.pg_container .pg_btn:HOVER {
+	background-color: #EEE;
+}
+
+.pg_container .pg_btn.current {
+	background-color: #E51F04;
+	color: #FFF;
+}

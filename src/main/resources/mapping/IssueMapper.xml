@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.yong.tm.dao.IssueDao">
+
+    <resultMap type="issue" id="mapOfIssue">
+        <id     column="id"             property="id"/>
+        <result column="name"           property="name"/>
+        <result column="created_date"   property="createdDate"/>
+        <result column="description"    property="description"/>
+        <result column="solution"       property="solution"/>
+        <association property="task"        javaType="task">
+            <id column="task_id"        property="id"/>
+        </association>
+        <association property="createdBy"   javaType="user" >
+            <id column="created_by"     property="account" />
+        </association>
+    </resultMap>
+    
+    <resultMap type="issue" id="mapOfIssueMoreInfos">
+        <result column="issue_name"           property="name"/>
+        <result column="issue_created_date"   property="createdDate"/>
+        <result column="issue_description"    property="description"/>
+        <result column="issue_solution"       property="solution"/>
+        
+        <association property="createdBy" javaType="user">
+            <id column="issue_created_by"       property="account"/>
+        </association>
+        
+        <association property="task" javaType="task">
+            <result column="task_name"      property="name"/>
+            <association property="module"  javaType="module">
+                <result column="module_name"    property="name"/>
+                <association property="project" javaType="project">
+                    <result column="project_name"   property="name"/>
+                </association>
+            </association>
+        </association>
+    </resultMap>
+
+    <sql id="colsOfIssue">
+        issue.id,
+        issue.`name`,
+        issue.task_id,
+        issue.created_date,
+        issue.description,
+        issue.solution,
+        issue.created_by
+    </sql>
+
+    <!-- 添加任务Issue记录 -->
+    <insert id="insert">
+        INSERT INTO issue (
+            id, `name`, task_id, created_date, description, solution, created_by
+        ) VALUES (
+            NULL, #{issue.name}, #{issue.task.id}, #{issue.createdDate}, 
+            #{issue.description}, #{issue.solution}, #{issue.createdBy.account}
+        )
+    </insert>
+    
+    <!-- 指定任务ID查询Issue列表 -->
+    <select id="selectByTaskId" parameterType="int" resultMap="mapOfIssue">
+        SELECT
+            <include refid="colsOfIssue" />
+        FROM
+            issue
+        WHERE
+            issue.task_id = #{taskId}
+    </select>
+    
+    <!-- 指定ID查询详情 -->
+    <select id="selectById" parameterType="int" resultMap="mapOfIssue">
+        SELECT
+            <include refid="colsOfIssue" />
+        FROM
+            issue
+        WHERE
+            issue.id = #{id}
+    </select>
+    
+    <!-- 指定任务ID删除相关Issue所有记录 -->
+    <delete id="deleteAllByTaskId" parameterType="int">
+        DELETE FROM issue WHERE task_id = #{taskId}
+    </delete>
+    
+    <!-- 指定ID删除Issue -->
+    <delete id="deleteById" parameterType="int">
+        DELETE FROM issue WHERE id = #{issueId}
+    </delete>
+    
+    <!-- 指定ID查询Issue信息, 包括: issue, task, model, project, performer的信息 -->
+    <select id="selectMoreInfosById" parameterType="int" resultMap="mapOfIssueMoreInfos">
+        SELECT
+            issue.`name`            issue_name,
+            issue.created_date      issue_created_date,
+            issue.description       issue_description,
+            issue.solution          issue_solution,
+            issue.created_by        issue_created_by,
+
+            task.`name`             task_name,
+            module.`name`           module_name,
+            project.`name`          project_name
+        FROM
+            issue,
+            task,
+            module,
+            project
+        WHERE
+            issue.task_id = task.id
+        AND module.id = task.module_id
+        AND project.id = module.project_id
+        AND issue.id = #{issueId}
+    </select>
+    
+</mapper>

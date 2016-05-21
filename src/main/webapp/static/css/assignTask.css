@@ -1,0 +1,22 @@
+@CHARSET "UTF-8";
+
+.assign_task_ctnr {}
+.assign_task_ctnr * li {list-style:none;}
+.assign_task_ctnr .list_ctnr div.title {padding:4px; margin:0; font-size:14px; background-color:#8DBECC; color:#FFF; text-align:center;}
+
+.assign_task_ctnr .list_ctnr .tools {padding:4px;}
+.assign_task_ctnr .list_ctnr .tools a:hover {color:#F00;}
+
+.assign_task_ctnr .list_ctnr .list {height:350px; overflow:auto;}
+.assign_task_ctnr .list_ctnr .list li {overflow:auto; padding:2px; cursor:pointer;}
+.assign_task_ctnr .list_ctnr .list li:hover {background-color:#EEE; color:#F00;}
+.assign_task_ctnr .list_ctnr .users_ctnr, 
+.assign_task_ctnr .list_ctnr .tasks_ctnr {padding:4px; border:1px solid #DDD; display:inline-block;}
+
+.assign_task_ctnr .users_ctnr {width:35%;}
+.assign_task_ctnr .users_ctnr .user.current {background-color:#CCA10B; color:#FFF;}
+
+.assign_task_ctnr .tasks_ctnr {width:64%;}
+.assign_task_ctnr .tasks_ctnr .task {border-bottom:1px solid #857F7F;}
+.assign_task_ctnr .tasks_ctnr .checkbox {margin:0;}
+.assign_task_ctnr .tasks_ctnr .checkbox>label {display:block;}

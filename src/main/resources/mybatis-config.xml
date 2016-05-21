@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" 
+         "http://mybatis.org/dtd/mybatis-3-config.dtd"> 
+<configuration> 
+    <typeAliases>
+        <!-- 在ParameterType或ResultType中直接使用类名, 首字母大小写均可 -->
+        <package name="org.yong.tm.model"/>
+    </typeAliases>
+    
+    <!-- 枚举类型处理器 -->
+    <typeHandlers>
+        <typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="org.yong.tm.model.enums.UserIdentity"    />
+        <typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="org.yong.tm.model.enums.ProjectStatus"   />
+        <typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="org.yong.tm.model.enums.TaskStatus"      />
+        <typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="org.yong.tm.model.enums.UserIdentity"    />
+        <typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="org.yong.tm.model.enums.ModuleStatus"    />
+        <typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="org.yong.tm.model.enums.TaskStatus"      />
+        <typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="org.yong.tm.model.enums.TaskOrder"       />
+    </typeHandlers> 
+</configuration> 

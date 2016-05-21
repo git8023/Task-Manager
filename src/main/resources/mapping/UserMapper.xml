@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.yong.tm.dao.UserDao">
+    
+    <resultMap id="userMap" type="user">
+        <id     column="account"        property="account" />
+        <result column="name"           property="name" />
+        <result column="pwd"            property="pwd" />
+        <result column="identity"       property="identity" />
+        <result column="created_date"   property="createdDate" />
+        <association property="createdBy" javaType="user">
+            <id column="created_by"     property="account" />
+        </association>
+    </resultMap>
+    
+    <!-- 指定用户名和密码查询用户 -->
+    <select id="selectByAccountAndPwd" resultMap="userMap">
+        SELECT
+            account       account,
+            name          name,
+            identity      identity,
+            created_by    createdBy,
+            created_date  createdDate
+        FROM
+            `user`
+        WHERE
+            account = #{account} 
+            AND pwd = #{pwd}
+    </select>
+
+    <!-- 查询用户列表 -->
+    <select id="selectList" resultMap="userMap">
+        SELECT
+            account       account,
+            name          name,
+            identity      identity,
+            created_by    createdBy,
+            created_date  createdDate
+        FROM
+            `user`
+    </select>
+
+</mapper>

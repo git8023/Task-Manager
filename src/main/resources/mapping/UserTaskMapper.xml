@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.yong.tm.dao.UserTaskDao">
+    <!-- 用户任务字段映射 -->
+    <resultMap type="userTask" id="mapOfUserTask">
+        <id     column="ut_id"      property="id"   />
+        <result column="ut_created_date"    property="createdDate" />
+        <result column="ut_finash_date"     property="ut_finash_date" />
+        <result column="ut_order"           property="order" />
+        <result column="ut_status"          property="status" />
+        <association property="manager" javaType="user">
+            <id    column="ut_manager"      property="account" />
+        </association>
+        <association property="performer" javaType="user">
+            <id    column="ut_performer"      property="account" />
+        </association>
+        <association property="task" javaType="task" >
+            <id     column="tsk_id"     property="id" />
+            <result column="tsk_name"   property="name" />
+        </association>
+    </resultMap>
+
+    <!-- 附件字段映射 -->
+    <resultMap type="attachment" id="mapOfAttachment">
+        <id     column="id"             property="id" />
+        <result column="name"           property="name" />
+        <result column="sql_path"       property="sqlPath" />
+        <result column="image_path"     property="imagePath" />
+        <result column="other_path"     property="otherPath" />
+        <result column="summary"        property="summary" />
+        <result column="created_date"   property="createdDate" />
+        
+        <association property="userTask" javaType="userTask">
+            <id     column="user_task_id"   property="id" />
+        </association>
+    </resultMap>
+
+    <!-- 查询任务/用户关联ID -->
+    <select id="selectIdByTaskAndAccount" resultType="int">
+        SELECT
+            id
+        FROM
+            user_task
+        WHERE
+            task_id = #{taskId}
+            AND performer = #{account}
+    </select>
+    
+    <!-- 插入任务附件记录 -->
+    <insert id="insertAttachments">
+        INSERT INTO attachment (
+            id, `name`, user_task_id, sql_path, image_path, other_path, summary, created_date
+        ) VALUES 
+        <foreach collection="attachments" item="acc" open="(" separator="," close=")">
+            NULL, #{acc.name}, #{userTaskId}, #{acc.sqlPath}, #{acc.imagePath}, #{acc.otherPath}, #{acc.summary}, #{acc.createdDate}
+        </foreach>
+    </insert>
+
+    <!-- 查询指定用户绑定的任务列表 -->
+    <select id="selectByAccount" parameterType="string" resultMap="mapOfUserTask">
+        SELECT
+            ut.id             ut_id,
+            ut.performer      ut_performer,
+            ut.created_date   ut_created_date,
+            ut.finash_date    ut_finash_date,
+            ut.manager        ut_manager,
+            ut.`order`        ut_order,
+            ut.`status`       ut_status,
+            tsk.id            tsk_id,
+            tsk.`name`        tsk_name
+        FROM
+            user_task ut
+        INNER JOIN
+            task tsk ON ut.task_id = tsk.id
+        WHERE
+            performer = #{account}
+    </select>
+
+    <!-- 插入用户任务关联关系 -->
+    <insert id="insertUserTask">
+        INSERT INTO user_task (
+            id, task_id, performer, created_date,  manager, `order`, `status`
+        ) VALUES (
+            NULL, #{userTask.task.id}, #{userTask.performer.account}, #{userTask.createdDate}, 
+            #{userTask.manager.account}, #{userTask.order}, #{userTask.status}
+        )
+    </insert>
+    
+    <!-- 指定用户任务关系ID获取任务附件列表 -->
+    <sql id="columnMappingOfAttachment">
+        attachment.id,
+        attachment.`name`,
+        attachment.user_task_id,
+        attachment.sql_path,
+        attachment.image_path,
+        attachment.other_path,
+        attachment.summary,
+        attachment.created_date
+    </sql>
+    <select id="selectAttachmentsByRIds" resultMap="mapOfAttachment">
+        SELECT
+            <include refid="columnMappingOfAttachment" />
+        FROM
+            attachment
+        WHERE
+            user_task_id IN
+            <foreach collection="userTaskIds" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+    </select>
+    
+    <!-- 删除附件记录 -->
+    <delete id="deleteAttachmentByRIds">
+        DELETE FROM
+            attachment
+        WHERE
+            user_task_id IN
+            <foreach collection="userTaskIds" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+    </delete>
+    
+    <!-- 删除用户任务关系 -->
+    <delete id="deleteByIds">
+        DELETE FROM
+            user_task
+        WHERE
+            id IN
+            <foreach collection="userTaskIds" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+    </delete>
+    
+    <!-- 查询任务与用户的关系数量 -->
+    <select id="countRelationshipByTaskId" parameterType="int" resultType="int">
+        SELECT COUNT(1) FROM user_task WHERE task_id = #{taskId}
+    </select>
+    
+    <!-- 查询附件列表 -->
+    <sql id="sqlOfAttachments">
+        FROM
+            attachment
+        INNER JOIN user_task ON attachment.user_task_id = user_task.id
+        WHERE
+            user_task.task_id = #{taskId}
+    </sql>
+    <select id="selectAttachmentsByTaskId" resultMap="mapOfAttachment">
+        SELECT
+            attachment.id,
+            attachment.`name`,
+            attachment.user_task_id,
+            attachment.sql_path,
+            attachment.image_path,
+            attachment.other_path,
+            attachment.summary,
+            attachment.created_date
+        <include refid="sqlOfAttachments" />
+        LIMIT
+            #{begin}, #{size}
+    </select>
+    <select id="countAttachmentsByTaskId" resultType="int">
+        SELECT
+            COUNT(1)
+        <include refid="sqlOfAttachments" />
+    </select>
+    
+    <!-- 查询附件列表 -->
+    <select id="selectAttachmentsByIds" resultMap="mapOfAttachment">
+        SELECT
+            <include refid="columnMappingOfAttachment" />
+        FROM
+            attachment
+        WHERE
+            id IN
+            <foreach collection="attachmentIds" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+    </select>
+    
+    <!-- 删除附件记录 -->
+    <delete id="deleteAttachmentByIds">
+        DELETE FROM attachment 
+        WHERE 
+            id IN
+            <foreach collection="attachmentIds" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+    </delete>
+    
+    <!-- 查询附件备注 -->
+    <select id="selectAttachmentNoteByAttachmentId" parameterType="int" resultType="string">
+        SELECT
+            summary
+        FROM
+            attachment
+        WHERE
+            id = #{attachmentId}
+    </select>
+    
+    <!-- 更新附件备注 -->
+    <update id="updateAttachmentNote">
+        UPDATE 
+            attachment
+        SET
+            summary = #{note}
+        WHERE
+            id = #{attachmentId}
+    </update>
+    
+    <!-- 查询附件列表 -->
+    <select id="selectAttachmentByAttachmentIds" resultMap="mapOfAttachment">
+        SELECT
+            <include refid="columnMappingOfAttachment" />
+        FROM
+            attachment
+        WHERE
+            id IN
+            <foreach collection="attachmentIds" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+    </select>
+    
+</mapper>

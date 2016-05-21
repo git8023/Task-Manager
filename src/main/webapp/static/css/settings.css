@@ -1,0 +1,32 @@
+@CHARSET "UTF-8";
+
+body {background-image:url("../image/settings_bg_2.jpg"); background-size:100%;}
+/* .disabled, */
+/* .disabled:hover, */
+/* .disabled:link {cursor:not-allowed; color:#DDD;} */
+
+.project_settings_container .projects,
+.project_settings_container .modules {border:2px solid #DDD; padding:7px;}
+
+.project_settings_container {height:300px;}
+.project_settings_container .projects,
+.project_settings_container .modules {float:left; height:90%;}
+.project_settings_container a:hover {color:#F00;}
+
+.project_settings_container .tools img {margin-right:3px; margin-top:-2px;}
+
+.project_settings_container .projects {width:35%; overflow:auto;}
+.project_settings_container .projects .name {height:25px; padding-top:5px;}
+/* .project_settings_container .projects .name, */
+/* .project_settings_container .projects .name label {cursor:pointer;} */
+.project_settings_container .projects .name:hover {color:#902;}
+.project_settings_container .projects .name.active {color:#F00; background-color:#EEE;}
+.project_settings_container .projects .name .ico {float:left; margin:2px;}
+/* .project_settings_container .projects .opt {margin:2px;} */
+.project_settings_container .projects .opt .ico {margin:0 2px; cursor:pointer; float:left;}
+
+.project_settings_container .modules {width:65%;}
+.project_settings_container .modules .module {padding:5px 5px 0;}
+.project_settings_container .modules .module:hover {background-color:#EEE;}
+.project_settings_container .modules .opt {float:right;}
+.project_settings_container .modules .opt .ico {margin:0 2px; cursor:pointer; }

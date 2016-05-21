@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.yong.tm.dao.ProjectDao">
+
+    <!-- 项目实体映射 -->
+    <resultMap type="project" id="mappingOfProject">
+        <id     column="id"             property="id" />
+        <result column="name"           property="name" />
+        <result column="created_date"   property="createdDate" />
+        <result column="note"           property="note" />
+        <result column="status"         property="status" />
+        <result column="ico_path"       property="icoPath" />
+        <association property="createdBy" javaType="user">
+            <result column="created_by"     property="account" />
+        </association>
+    </resultMap>
+
+    <!-- 插入项目记录 -->
+    <insert id="insertProject">
+        INSERT INTO project (
+            id, `name`, created_date, created_by, note, `status`, ico_path
+        ) VALUES(
+            NULL, #{project.name}, #{project.createdDate},  #{project.createdBy.account}, 
+            #{project.note}, #{project.status}, #{project.icoPath}
+        )
+    </insert>
+
+    <!-- 指定条件查询项目列表 -->
+    <select id="selectListByCondition" resultMap="mappingOfProject">
+        SELECT
+            project.id,
+            project.`name`,
+            project.created_date,
+            project.created_by,
+            project.note,
+            project.`status`,
+            project.ico_path
+        FROM
+            project
+    </select>
+
+    <!-- 更新项目信息 -->
+    <update id="updateById">
+        UPDATE 
+            project
+        SET
+            id = #{id}
+            <if test="null != project">
+                <if test="null != project.name and '' != project.name">
+    	            ,`name` = #{project.name}
+                </if>
+                <if test="null != project.createdBy and null != project.createdBy.account and '' != project.createdBy.account">
+    	            ,created_by = #{project.createdBy.account}
+                </if>
+                <if test="null != project.note and '' != project.note">
+    	            ,note = #{project.note}
+                </if>
+                <if test="null != project.status">
+    	            ,`status` = #{project.status}
+                </if>
+                <if test="null != project.icoPath and '' != project.icoPath">
+    	            ,ico_path = #{project.icoPath}
+                </if>
+            </if>
+        WHERE
+            id = #{id}
+    </update>
+
+</mapper>

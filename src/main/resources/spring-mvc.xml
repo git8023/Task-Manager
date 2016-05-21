@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+    http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+    http://www.springframework.org/schema/mvc 
+    http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+    http://www.springframework.org/schema/aop 
+    http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+    
+    <!-- 静态资源配置 -->
+    <context:property-placeholder location="classpath:tm.properties"/>
+    
+    <!-- 启用spring mvc 注解扫描-->
+    <context:annotation-config />
+    
+    <!-- 自动扫描注解 -->
+    <context:component-scan base-package="org.yong" />
+    
+    <!-- 注解驱动配置 -->
+    <mvc:annotation-driven conversion-service="conversionService" />
+    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <bean class="org.yong.util.spring.convertors.StringToDateConvertor" />
+                <bean class="org.yong.util.spring.convertors.StringToEnumConverterFactory" />
+            </set>
+        </property>
+    </bean>
+    
+    <!-- 支持方法上RequestMapping -->
+    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <ref bean="mappingJacksonHttpMessageConverter" /><!-- json转换器 -->
+            </list>
+        </property>
+    </bean>
+    
+    <!-- 支持JSON请求映射到请求实体对象 -->
+    <bean id="mappingJacksonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+        <property name="supportedMediaTypes">
+            <list>
+                <value>text/html;charset=UTF-8</value>
+            </list>
+        </property>
+    </bean>
+    
+    <!-- 视图控制器 -->
+    <mvc:view-controller path="/" view-name="index"/>
+    
+    <!-- 视图处理器 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" 
+        p:prefix="/WEB-INF/" p:suffix=".jsp" />
+    
+    <!-- 配置MultipartResolver 用于文件上传 使用spring的CommosMultipartResolver -->  
+<!--     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"   -->
+<!--         p:defaultEncoding="UTF-8"   -->
+<!--         p:maxUploadSize="5400000"   -->
+<!--         p:uploadTempDir="fileUpload/tmp"   -->
+<!--      >   -->
+<!--     </bean> -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"  
+        p:defaultEncoding="UTF-8"  
+        p:maxUploadSize="5400000"  
+     >  
+    </bean>
+    
+    <!-- 导入其他资源 -->
+    <import resource="classpath:spring-dao.xml"/>
+</beans>

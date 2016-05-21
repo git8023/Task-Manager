@@ -1,0 +1,11 @@
+@CHARSET "UTF-8";
+
+/* .upload_file_ctnr {display:none;} */
+.upload_file_ctnr .input-group-addon {border-left:1px solid #AAA;}
+.upload_file_ctnr .chooser_container {}
+
+.upload_file_ctnr .file_item {width:93.5%; height:100%; margin-top:5px;}
+.upload_file_ctnr .file_item .form-control {margin:0; padding:0;}
+.upload_file_ctnr .file_item .name {width:100%; height:100%; line-height:28px; padding-left:10px;}
+.upload_file_ctnr .file_item .process_ctnr {width:78%; height:100%; position:absolute; left:0; top:0;}
+.upload_file_ctnr .file_item .process_ctnr .process {background-color:#499AB2; width:0%; height:100%; }

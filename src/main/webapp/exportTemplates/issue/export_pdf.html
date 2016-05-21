@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd ">     
+<html xmlns="http://www.w3.org/1999/xhtml ">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Insert title here</title>
+    <style type="text/css">
+       body {font-family:SimSun; font-size:12px;}
+       .issue_detail {}
+       .issue_detail .bdr {border:1px solid #DDD;}
+       .issue_detail .bdr_0 {border:0;}
+       .issue_detail table {width:100%;}
+       .issue_detail table td {border-bottom:1px solid #EEE; padding:10px 5px; white-space:nowrap; width:40%;}
+       .issue_detail table td.title {text-align:right; width:10%;}
+       .issue_detail table td.txt_left {text-align:left; padding-top:40px;}
+    </style>
+</head>
+<body>
+    <div class="issue_detail">
+        <table cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <td colspan="4" class="bdr_0" style="font-size:24px; font-weight:bold; text-align:center; padding:20px">#{name}</td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="bdr_0" style="text-align:right;">-- #{createdBy.account}</td>
+                </tr>
+                <tr>
+                    <td class="title">Project Name:</td>
+                    <td>#{task.module.project.name}</td>
+                    <td class="title">Module Name:</td>
+                    <td>#{task.module.name}</td>
+                </tr>
+                <tr>
+                    <td class="title">Task Name:</td>
+                    <td>#{task.name}</td>
+                    <td class="title">Created Date:</td>
+                    <td>#{createdDate}</td>
+                </tr>
+                <tr>
+                    <td class="title txt_left">Description:</td>
+                    <td colspan="3"></td>
+                </tr>
+                <tr class="summer_note">
+                    <td colspan="4" class="bdr">#{description}</td>
+                </tr>
+                <tr>
+                    <td class="title txt_left">Solution:</td>
+                    <td colspan="3"></td>
+                </tr>
+                <tr class="summer_note">
+                    <td colspan="4" class="bdr">#{solution}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+</body>
+</html>

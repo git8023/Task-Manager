@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.yong.tm.dao.TaskDao">
+
+    <!-- 任务映射 -->
+    <resultMap type="task" id="mappingOfTask">
+        <id     column="id"             property="id"           />
+        <result column="name"           property="name"         />
+        <result column="created_date"   property="createdDate"  />
+        <result column="target_date"    property="targetDate"   />
+        <result column="finish_date"    property="finishDate"   />
+        <result column="status"         property="status"       />
+        <result column="order"          property="order"        />
+        <result column="note"           property="note"         />
+        <association property="createdBy" javaType="user">
+            <result column="created_by" property="account" />
+        </association>
+        <association property="module" javaType="module">
+            <result column="module_id"  property="id" />
+            <result column="module_name"  property="name" />
+        </association>
+        <association property="module.project" javaType="project">
+            <result column="project_id"  property="name" />
+            <result column="project_name"  property="name" />
+        </association>
+    </resultMap>
+
+    <!-- 任务映射 -->
+    <resultMap type="taskVO" id="mappingOfTaskVO" extends="mappingOfTask">
+        <result column="performer"      property="performer"    />
+    </resultMap>
+
+    <!-- 分页查询任务列表 -->
+    <sql id="columnsOfTask">
+        task.id,
+        task.`name`,
+        task.module_id,
+        task.created_date,
+        task.target_date,
+        task.finish_date,
+        task.created_by,
+        task.`status`,
+        task.`order`,
+        task.note
+    </sql>
+    <sql id="sqlOfTask">
+        FROM
+            task
+        INNER JOIN module ON task.module_id = module.id
+        INNER JOIN project ON project.id = module.project_id
+        <if test="condition != null">
+            <where>
+                1 = 1
+                <if test="condition.createdFromDate != null">
+                    AND task.created_date &lt;= #{condition.createdFromDate}
+                </if>
+                <if test="condition.createdEndDate != null">
+                    AND task.created_date &gt; #{condition.createdEndDate}
+                </if>
+                <if test="condition.finishFromDate != null">
+                    AND task.finish_date &lt;= #{condition.finishFromDate}
+                </if>
+                <if test="condition.finishEndDate != null">
+                    AND task.finish_date &gt; #{condition.finishEndDate}
+                </if>
+                <if test="condition.task != null">
+                    <if test="condition.task.id != null and condition.task.id != ''">
+                        AND task.id = #{condition.task.id}
+                    </if>
+                    <if test="condition.task.name != null and condition.task.name != ''">
+                        AND task.`name` LIKE #{condition.task.name}
+                    </if>
+                    <if test="condition.task.module != null and condition.task.module.id != null and condition.task.module.id != ''">
+                        AND task.module_id = #{condition.task.module.id}
+                    </if>
+                    <if test="condition.task.status != null and condition.task.status != ''">
+                        AND task.`status` = #{condition.task.status}
+                    </if>
+                    <if test="condition.task.createdBy != null and condition.task.createdBy.account != null and condition.task.createdBy.account != ''">
+                        AND task.created_by LIKE #{condition.task.createdBy.account}
+                    </if>
+                </if>
+            </where>
+        </if>
+    </sql>
+    <select id="countListByCondition" resultType="int">
+        SELECT
+            count(1)
+        <include refid="sqlOfTask" />
+    </select>
+    <select id="selectListByCondition" resultMap="mappingOfTask">
+        SELECT
+            <include refid="columnsOfTask" />,
+            module.`name` module_name,
+            project.id project_id,
+            project.`name` project_name
+        <include refid="sqlOfTask" />
+        ORDER BY
+            `order`
+        LIMIT
+            #{begin}, #{size}
+    </select>
+    
+    <!-- 查询任务名数量 -->
+    <select id="countByNameAndModuleId" resultType="int">
+        SELECT
+            COUNT(1)
+        FROM
+            task
+        WHERE
+            `name` = #{name}
+            AND module_id = #{moduleId}
+    </select>
+
+    <!-- 插入任务数据 -->
+    <insert id="insert" >
+        INSERT INTO task(
+            id, `name`, module_id, created_date, target_date, finish_date, created_by, `status`, `order`, note
+        ) VALUES (
+            NULL, #{task.name}, #{task.module.id}, #{task.createdDate}, #{task.targetDate}, 
+            #{task.finishDate}, #{createdBy}, #{task.status}, #{task.order}, #{task.note}
+        )
+    </insert>
+    
+    <!-- 分页而获取任务列表 -->
+    <sql id="sqlOfTaskVO">
+        FROM
+            task
+        INNER JOIN module ON task.module_id = module.id
+        INNER JOIN project ON project.id = module.project_id
+        LEFT JOIN user_task ON user_task.task_id = task.id
+        <if test="condition != null">
+            <where>
+                1 = 1
+                <if test="condition.createdFromDate != null">
+                    AND task.created_date &lt;= #{condition.createdFromDate}
+                </if>
+                <if test="condition.createdEndDate != null">
+                    AND task.created_date &gt; #{condition.createdEndDate}
+                </if>
+                <if test="condition.finishFromDate != null">
+                    AND task.finish_date &lt;= #{condition.finishFromDate}
+                </if>
+                <if test="condition.finishEndDate != null">
+                    AND task.finish_date &gt; #{condition.finishEndDate}
+                </if>
+                <if test="condition.task != null">
+                    <if test="condition.task.id != null and condition.task.id != ''">
+                        AND task.id = #{condition.task.id}
+                    </if>
+                    <if test="condition.task.name != null and condition.task.name != ''">
+                        AND task.`name` LIKE #{condition.task.name}
+                    </if>
+                    <if test="condition.task.module != null and condition.task.module.id != null and condition.task.module.id != ''">
+                        AND task.module_id = #{condition.task.module.id}
+                    </if>
+                    <if test="condition.task.status != null and condition.task.status != ''">
+                        AND task.`status` = #{condition.task.status}
+                    </if>
+                    <if test="condition.task.createdBy != null and condition.task.createdBy.account != null and condition.task.createdBy.account != ''">
+                        AND task.created_by LIKE #{condition.task.createdBy.account}
+                    </if>
+                </if>
+            </where>
+        </if>
+    </sql>
+    <select id="countListByConditionForVO" resultType="int">
+        SELECT
+            count(1)
+        <include refid="sqlOfTaskVO" />
+    </select>
+    <select id="selectListByConditionForVO" resultMap="mappingOfTaskVO">
+        SELECT
+            <include refid="columnsOfTask" />,
+            module.`name`       module_name,
+            project.id          project_id,
+            project.`name`      project_name,
+            user_task.performer performer
+        <include refid="sqlOfTaskVO" />
+        ORDER BY
+            `order`
+        LIMIT
+            #{begin}, #{size}
+    </select>
+    
+    <!-- 指定任务ID和用户账户获取任务数量 -->
+    <select id="countByTaskIdAndAccount" resultType="int">
+        SELECT
+            count(1)
+        FROM
+            user_task
+        WHERE
+            user_task.task_id = #{taskId}
+            AND performer = #{performer}
+    </select>
+    
+    <!-- 指定任务ID和状态查询任务数量 -->
+    <select id="countByTaskIdAndStatus" resultType="int">
+        SELECT
+            count(1)
+        FROM
+            user_task
+        WHERE
+            user_task.task_id = #{taskId}
+            AND user_task.`status` = #{taskStatus}
+    </select>
+    
+    <!-- 更新与用户相关的任务状态 -->
+    <update id="updateStatusByIdAndAccount">
+        UPDATE
+            user_task
+        SET
+            user_task.`status` = #{taskStatus}
+        WHERE
+            user_task.task_id = #{taskId}
+            AND performer = #{performer}
+    </update>
+    
+    <!-- 更新任务状态 -->
+    <update id="updateStatusById">
+        UPDATE
+            task
+        SET
+            task.`status` = #{taskStatus}
+        WHERE
+            task.id = #{taskId}
+    </update>
+    
+</mapper>
