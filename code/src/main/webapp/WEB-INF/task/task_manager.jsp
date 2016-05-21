@@ -101,6 +101,69 @@
                 </thead>
             </table>
         </div>
+        
+        
+        
+        
+        <div class="src">
+            <!-- 任务审核 -->
+            <div class="verifying_container">
+                <div class="menus">
+                    <a href="javascript:;" class="menu completed" title="Verify to Redo or COMPLETED"><img src="<%=basePath %>static/image/task/issue/issue_add.gif"/>Completed</a>
+                    <span class="separator">|</span>
+                    <a href="javascript:;" class="menu redo" title="Verify to Redo or COMPLETED"><img src="<%=basePath %>static/image/task/issue/issue_add.gif"/>Redo</a>
+                    <span class="separator">|</span>
+                    <a href="javascript:;" class="menu free" title="Verify to Redo or COMPLETED"><img src="<%=basePath %>static/image/task/issue/issue_add.gif"/>Free</a>
+                </div>
+                
+                <div class="spliter_container">
+                    <div class="left">
+                        <div class="task_detail">
+                            <form class="form-horizontal">
+                                <div class="form-group">
+                                    <label for="taskName" class="col-sm-3 control-label">Task Name</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="taskName" name="name" disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="targetDate" class="col-sm-3 control-label">Target Date</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="targetDate" name="targetDate" 
+                                            disabled="disabled" handler="date" format="yyyy-MM-dd hh:mm:ss">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-12">
+                                        <textarea name="note" class="form-control" cols="30" rows="10" disabled="disabled"></textarea>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <div class="fns_container">
+                            <ul>
+                                <li class="fn" to-title="Issue" url-data="task/getIssues.cmd">Issues</li>
+                                <li class="fn" to-title="SQL Files" url-data="task/getSqlAttachmentFiles.cmd">SQL Files</li>
+                                <li class="fn" to-title="Other Files" url-data="task/getOtherFiles.cmd">Other Files</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- 右边 -->
+                    <div class="right hidden">
+                        <div class="title">To Tile</div>
+                        <ul class="list">
+                            <li>Item_Name_1</li>
+                            <li>Item_Name_2</li>
+                            <li>Item_Name_3</li>
+                            <li>Item_Name_4</li>
+                            <li>Item_Name_5</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 </body>

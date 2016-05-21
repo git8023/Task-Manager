@@ -138,4 +138,9 @@ public class UserTaskServiceImpl implements UserTaskService {
 		List<Integer> attaList = Lists.newArrayList(attachmentsIds);
 		return userTaskDao.selectAttachmentByAttachmentIds(attaList);
 	}
+
+	@Override
+	public List<Attachment> getSQLFilesByTaskId(Integer taskId) {
+		return userTaskDao.selectSqlAttachmentByTaskId(taskId);
+	}
 }

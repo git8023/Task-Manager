@@ -140,4 +140,12 @@ public interface UserTaskDao {
 	 */
 	List<Attachment> selectAttachmentByAttachmentIds(@Param("attachmentIds") List<Integer> attachmentIds);
 
+	/**
+	 * @Title: selectSqlAttachmentByTaskId
+	 * @Description: 查询SQL附件列表
+	 * @param taskId 任务ID
+	 * @return List&lt;Attachment&gt; SQL附件列表
+	 */
+	List<Attachment> selectSqlAttachmentByTaskId(Integer taskId);
+
 }

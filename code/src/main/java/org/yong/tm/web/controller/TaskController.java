@@ -631,6 +631,33 @@ public class TaskController {
 	}
 
 	/**
+	 * @Title: getSqlFiles
+	 * @Description: 获取指定任务关联的 SQL 文件
+	 * @param taskId 任务ID
+	 * @return ModelMap flag:true-获取成功, false-获取失败; message:失败消息; data:SQL文件列表
+	 */
+	@RequestMapping("/getSqlAttachmentFiles")
+	@ResponseBody
+	public ModelMap getSqlAttachmentFiles(Integer taskId) {
+		boolean flag = false;
+		String message = null;
+		List<Attachment> data = null;
+
+		try {
+			data = userTaskService.getSQLFilesByTaskId(taskId);
+			flag = true;
+		} catch (VerifyParameterException e) {
+			message = e.getMessage();
+		} catch (Exception e) {
+			flag = false;
+			message = "Get SQL files error";
+			LOGGER.warn(message + " : " + e.getMessage(), e);
+		}
+
+		return WebUtil.getModelMap(flag, data, message);
+	}
+
+	/**
 	 * @Title: downloadAttachments
 	 * @Description: 打包下载附件
 	 * @param attachments 附件对象列表

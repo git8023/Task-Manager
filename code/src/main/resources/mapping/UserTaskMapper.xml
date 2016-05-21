@@ -220,4 +220,18 @@
             </foreach>
     </select>
     
+    <!-- 查询SQL附件列表 -->
+    <select id="selectSqlAttachmentByTaskId" parameterType="int" resultMap="mapOfAttachment">
+        SELECT
+            attachment.id,
+            attachment.`name`,
+            attachment.sql_path,
+            attachment.summary
+        FROM
+            attachment
+        INNER JOIN user_task ON user_task.id = attachment.user_task_id
+        WHERE
+            user_task.task_id = #{taskId}
+    </select>
+    
 </mapper>

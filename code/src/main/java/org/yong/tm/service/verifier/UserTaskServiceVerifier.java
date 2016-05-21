@@ -149,6 +149,16 @@ public class UserTaskServiceVerifier implements UserTaskService {
 		return userTaskServiceImpl.downloadAttachments(attachmentsIds);
 	}
 
+	@Override
+	public List<Attachment> getSQLFilesByTaskId(Integer taskId) throws VerifyParameterException {
+		String errMsg = null;
+		if (null == taskId || 0 >= taskId) {
+			errMsg = TMConstants.ACCESS_DENIED_OF_PARAMETERS + "[Task Primary-Key]";
+		}
+		throwException(errMsg);
+		return userTaskServiceImpl.getSQLFilesByTaskId(taskId);
+	}
+
 	/**
 	 * @Title: throwException
 	 * @Description: 抛出参数验证异常

@@ -103,4 +103,13 @@ public interface UserTaskService {
 	 * @throws VerifyParameterException
 	 */
 	List<Attachment> downloadAttachments(Integer[] attachmentsIds) throws VerifyParameterException;
+
+	/**
+	 * @Title: getSQLFilesByTaskId
+	 * @Description: 获取SQL附件列表
+	 * @param taskId 任务ID
+	 * @return List&lt;Attachment&gt; SQL附件列表
+	 * @throws VerifyParameterException
+	 */
+	List<Attachment> getSQLFilesByTaskId(Integer taskId) throws VerifyParameterException;
 }

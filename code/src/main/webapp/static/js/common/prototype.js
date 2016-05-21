@@ -21,15 +21,10 @@ Date.prototype.format = function(format) {
 	// millisecond
 	};
 
-	if (/(y+)/.test(format)) {
-		format = format.replace(RegExp.$1, (this.getFullYear() + "")
-				.substr(4 - RegExp.$1.length));
-	}
-
+	if (/(y+)/.test(format))format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
 	for ( var k in o) {
-		if (new RegExp("(" + k + ")").test(format)) {
-			format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k]
-					: ("00" + o[k]).substr(("" + o[k]).length));
+		if (new RegExp("(" + k + ")").test(format)){
+			format=format.replace(RegExp.$1,RegExp.$1.length==1? o[k]:("00"+o[k]).substr((""+o[k]).length));
 		}
 	}
 	return format;
@@ -42,94 +37,62 @@ Date.prototype.format = function(format) {
  */
 Date.prototype.diffDays = function(d, type) {
 	// var tps = ["MS", "HH", "DAY", "MT"];
-	if (!type)
-		type = "MS";
-	if (!d)
-		return false;
-	if (d == this)
-		return 0;
-	var rt = function(ms, val) {
-		return parseInt((ms + val - 1) / val);
-	};
+	if (!type) type = "MS";
+	if (!d)return false;
+	if (d==this)return 0;
+	var rt=function(ms, val) {return parseInt((ms+val-1)/val);};
 	return {
 		/** 默认值, 返回毫秒差值 */
-		MS : function(ms) {
-			return ms;
-		},
+		MS : function(ms){return ms;},
 
 		/** 将毫秒数转化为小时, 不足1时记为1 */
-		HH : function(ms) {
-			return rt(ms, 60 * 60 * 1000);
-		},
+		HH : function(ms){return rt(ms,60*60*1000);},
 
 		/** 将毫秒数转换为天数, 不足1时记为1 */
-		DAY : function(ms) {
-			return rt(ms, 24 * 60 * 60 * 1000);
-		}
-	}[type](this.getTime() - d.getTime());
+		DAY : function(ms){return rt(ms, 24*60*60*1000);}
+	}[type](this.getTime()-d.getTime());
 };
 
 /**
  * 修改日期--DAY
- * 
- * @param d
- *            差值
+ * @param d {Number} 差值
  * @returns {Date} 修改后的日期
  */
-Date.prototype.addDays = function(d) {
-	// this.setDate(this.getDate() + d);
-	d = d * 24 * 60 * 60 * 1000;
-	return new Date(this.getTime() + d);
-};
+Date.prototype.addDays = function(d) {return new Date(this.getTime()+d*24*60*60*1000);};
 
 /**
- * 利用正则表达式去掉前后空格,
- * 
+ * 利用正则表达式去掉前后空格
  * @returns {String} 去除前后空格后的当前字符串
  */
 String.prototype.trim = function() {
-	if (this.length) {
-		var s = this.match(/\S+(\s*\S+)*/ig);
-		return (s ? s[0] : "");
-	}
+	if (this.length) {var s=this.match(/\S+(\s*\S+)*/ig);return (s?s[0]:"");}
 	return this;
 };
 
 /**
  * 删除指定下标字符
- * 
- * @param index
- *            下标, -1:删除最后一个, 否则数据非法时返回当前字符串
+ * @param index {Number} 下标, -1:删除最后一个, 否则数据非法时返回当前字符串
  * @returns {String} 删除后的值
  */
 String.prototype.deleteAt = function(index) {
-	if (isNaN(index))
-		return this.toString();
+	if (isNaN(index))return this.toString();
 	index = parseInt(index);
 	var len = this.length;
-	if (0 >= len)
-		return "";
-	if (-1 == index)
-		index = len - 1;
+	if (0>=len)return "";
+	if (-1 == index)index = len - 1;
 	var tmpArr = [];
-	for (var i = 0; i < len; i++)
-		if (index != i)
-			tmpArr.push(this[i]);
+	for (var i = 0; i < len; i++)if (index != i)tmpArr.push(this[i]);
 	return tmpArr.join("");
 };
 
 /**
  * 从后往前截取字符串
- * 
- * @param length
- *            要截取的长度, 值小于1时返回空字符串, 大于length时返回当前字符串
+ * @param length {Number} 要截取的长度, 值小于1时返回空字符串, 大于length时返回当前字符串
  * @returns {String} 截取的目标字符串
  */
 String.prototype.reverseSubstring = function(length) {
-	if (isNaN(length))
-		return null;
-	var size = parseInt(length);
-	return this.substring(this.length - size);
+	if (isNaN(length))return null;
+	return this.substring(this.length-parseInt(length));
 };
 
 /**
@@ -138,39 +101,29 @@ String.prototype.reverseSubstring = function(length) {
 String.prototype.upperFirst = function() {
 	// 多个单词
 	var spArr = this.split(" ");
-
 	// 第一个单词
-	var arr = [];
-	var ls = spArr[0].split("");
+	var arr=[];
+	var ls=spArr[0].split("");
 	arr.push(ls[0].toUpperCase());
-	ls.each(function(v, i) {
-		arr.push(v.toLowerCase());
-	}, 1);
-
-	var fWord = arr.join(""), str = fWord;
+	ls.each(function(v, i) {arr.push(v.toLowerCase());}, 1);
+	var fWord=arr.join(""), str = fWord;
 	spArr.splice(0, 1);
-	return (0 < spArr.length ? (fWord + " " + spArr.join(" ")) : fWord);
+	return (0<spArr.length?(fWord +" "+spArr.join(" ")):fWord);
 };
 
 /**
  * 验证两个字符串是否相等
- * @param other 其他字符串
- * @param isIgnoreCase 是否忽略大小写
- * @param isTrim 是否去掉前后空格
+ * @param other {String} 其他字符串
+ * @param isIgnoreCase {Boolean} 是否忽略大小写
+ * @param isTrim {Boolean} 是否去掉前后空格
  */
 String.prototype.equals = function(other, isIgnoreCase, isTrim) {
 	if (this==other)return true;
 	if (null==other || undefined==other)return false;
-
 	var thisStr=this.toString();
-	if (true==isIgnoreCase) {
-		thisStr=thisStr.toLowerCase(), other=other.toLowerCase();
-		if (thisStr == other)return true;
-	}
-
+	if (true==isIgnoreCase) {thisStr=thisStr.toLowerCase(), other=other.toLowerCase();}
 	thisStr = thisStr.toString();
 	if (true==isTrim) {thisStr=thisStr.trim(), other=other.trim();}
-
 	return (thisStr == other);
 };
 
@@ -214,15 +167,15 @@ Array.prototype.unique = function() {
  * @param begin 开始下标, 默认0
  */
 Array.prototype.each = function(callback, begin) {
-	if (undefined==begin && null==begin)begin = 0;
+	begin=begin||0;
 	begin=isNaN(begin)?begin:0;
-	for (var i = 0; i < this.length; i++) if (i >= begin && false == callback(this[i], i))break;
+	for (var i=0; i<this.length; i++) if (i >= begin && false == callback(this[i], i))break;
 };
 
 /**
  * 获取数组最后一个元素
  */
-Array.prototype.end=function(){return this[this.length - 1];};
+Array.prototype.end=function(){return this.length?this[this.length-1]:undefined;};
 
 /**
  * 检测两个数组是否相同
@@ -327,13 +280,12 @@ if ($) {
 	 */
 	$.fn.disable = function(countdown) {
 		var val=parseInt(countdown);
-		// val:0, 不自动启用控件
 		if(val!=countdown || 0>=val)val=0;
 		var $this = $(this);
 		if(val) {setTimeout(function(){$this.removeAttr("disabled");}, val);}
 		else {$this.attr({"disabled":"disabled"});}
 		return $(this);
-	}
+	};
 	
 	/**
 	 * 获取当前元素HTML定义
@@ -365,17 +317,17 @@ if ($) {
 			if(undefined!=value && true!=value && (value && typeof value!=="object"))$this.val(value);
 		};
 		return $this;
-	}
+	};
 	
 	/** window滚动条判断 */
 	$.hasScroll = function(){return {
 		right:document.documentElement.clientHeight<document.documentElement.offsetHeight,
 		bottom:undefined
-	};}
+	};};
 	
 	/** 找不到记录 */
-	$.getNoRecordFound = function(){return $("<div/>").addClass("no_record_found").html("No Record Found");}
+	$.getNoRecordFound = function(){return $("<div/>").addClass("no_record_found").html("No Record Found");};
 	
 	/** 获取红色文字控件 */
-	$.red=function(ctt){return $("<font/>",{html:ctt||""}).css({"color":"#F00"});}
+	$.red=function(ctt){return $("<font/>",{html:ctt||""}).css({"color":"#F00"});};
 }

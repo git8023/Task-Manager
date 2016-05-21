@@ -15,9 +15,18 @@ $(function() {
  */
 function TaskManagerFn() {
 	var CLASS_ANCHOR = "anchor";
-	var DISABLED = "disabled";
-	var CELL_VALUE_OF_FREE_STATUS="FREE";
+	var CLASS_ACTIVE = "active";
+	var CLASS_OF_ROLLBACK="orig";
+	var CLASS_OF_JCONFIRM_BOX_OFFSET = "offset3 col-md-6 col-md-offset-3";
+	var CLASS_OF_LAGER = "lager";
+
 	var PROPERTY_NAME_OF_STATUS = "status";
+	var DISABLED = "disabled";
+	
+	var STATUS_OF_FREE="FREE";
+	var STATUS_OF_DOING="DOING";
+	var STATUS_OF_VERIFYING="VERIFYING";
+	var STATUS_OF_COMPLETED="COMPLETED";
 	
 	var $thisObj = this;
 	var baseCtnr = $(".task_manager_container");
@@ -47,22 +56,88 @@ function TaskManagerFn() {
 	// TODO 批量删除选中的任务; 
 	// 只能删除为下放的任务, 如果任务存在附件让用户确认是否下载附件后, 再删除
 	function deleteChoosedTasksEvent(){
+		var $this = $(this);
+		if ($this.hasClass(DISABLED))return;
 		$.jc.warning("Please waiting...deleteChoosedTasksEvent");
 	}
 	
 	// TODO 批量取消已下放的任务
 	function unassignTasksEvent(){
+		var $this = $(this);
+		if ($this.hasClass(DISABLED))return;
 		$.jc.warning("Please waiting...unassignTasksEvent");
 	}
 	
 	// TODO 批量下发任务到指定用户
 	function assignTasksToUserEvent(){
+		var $this = $(this);
+		if ($this.hasClass(DISABLED))return;
 		$.jc.warning("Please waiting...assignTasksToUserEvent");
 	}
 	
 	// TODO 管理员审核事件
 	function verifyingEvent(){
-		$.jc.warning("Please waiting...verifyingEvent");
+		var $this = $(this);
+		if ($this.hasClass(DISABLED))return;
+		
+		var taskId=getChoosedTasksId()[0];
+		var taskName=grid.getCellValue("name", getChoosedTasks());
+		var jc=$.confirm({title:"Task Verifying - " + taskName, content:"", confirm:function(){
+			$.jc.warning("Submit verifying...");
+		}});
+		
+		requestUtil.jsonAjax({
+			url : "task/taskDetails.cmd",
+			data : {taskId:taskId},
+			success : function(rData){
+				if(!rData.flag){$.jc.warning(rData.message); return;}
+				
+				var verifyingCtnr=baseCtnr.find(".verifying_container");
+				jc.setContent(verifyingCtnr);
+				var form = new Form(verifyingCtnr, TaskManagerDebug);
+				form.fillForm({data:rData.data});
+				
+				// 为动态添加的元素绑定事件
+				jc.contentDiv.find(".fn").click(function(){activeVerifyingFn($(this), jc, taskId);});
+			},
+			error : function(){$.jc.error();}
+		});
+	}
+	
+	// 审核时, 右侧功能激活事件
+	function activeVerifyingFn($this, $jc, taskId){
+		var verifyingCtnr=$jc.contentDiv;
+		var jcBoxCtnr=$jc.$el.find(".jconfirm-box-container");
+		var rightCtnr=verifyingCtnr.find(".right");
+		
+		if($this.hasClass(CLASS_ACTIVE)){showRightCtnr($this, jcBoxCtnr, rightCtnr);return;}
+		else {hideRightCtnr($this, jcBoxCtnr, rightCtnr);}
+
+		// TODO 请求列表数据
+		rightCtnr.find(".title").html($this.attr("to-title"));
+		requestUtil.jsonAjax({
+			url : $this.attr("url-data"),
+			data : {taskId:taskId},
+			success : function(rData){
+			},
+			error : function(){$.jc.error();}
+		});
+	}
+	
+	// 隐藏右边的容器
+	function hideRightCtnr($this, jcBoxCtnr, rightCtnr){
+		$this.parent().find("."+CLASS_ACTIVE).removeClass(CLASS_ACTIVE);
+		$this.addClass(CLASS_ACTIVE);
+		jcBoxCtnr.removeClass(CLASS_OF_ROLLBACK).addClass(CLASS_OF_LAGER).removeClass(CLASS_OF_JCONFIRM_BOX_OFFSET);
+		rightCtnr.removeClass("hidden");
+	}
+	
+	// 显示右边的容器
+	function showRightCtnr($this, jcBoxCtnr, rightCtnr){
+		$this.removeClass(CLASS_ACTIVE);
+		jcBoxCtnr.removeClass(CLASS_OF_LAGER).addClass(CLASS_OF_ROLLBACK);
+		setTimeout(function(){jcBoxCtnr.addClass(CLASS_OF_JCONFIRM_BOX_OFFSET).removeClass(CLASS_OF_ROLLBACK);}, 500);
+		rightCtnr.addClass("hidden");
 	}
 	
 	// 注册委托事件
@@ -72,6 +147,13 @@ function TaskManagerFn() {
 			$(this).toggleClass("choosed"); 
 			enabledMenus();
 		});
+		
+		// 审核功能事件, Jconfirm 动态添加后, 事件无效
+//		$("body").undelegate(".fns_container .fn", "click").delegate(".fns_container .fn", "click", function(){
+//			var $this = $(this);
+//			$this.parent().find("."+CLASS_ACTIVE).removeClass(CLASS_ACTIVE);
+//			$this.addClass(CLASS_ACTIVE);
+//		});
 	}
 	
 	// 启用功能菜单
@@ -83,36 +165,31 @@ function TaskManagerFn() {
 
 		// 开启所有功能
 		menus.removeClass(DISABLED);
-
-		var CELL_VALUE_OF_DOING_STATUS="DOING";
-		var CELL_VALUE_OF_VERIFYING_STATUS="VERIFYING";
 		
-		var assignableBatch=true, disabledBatch=true, freeableBatch=true;
+		/** 仅支持 FREE */
+		var assignable=true;
+		/** 仅支持 FREE */
+		var disabled=true;
+		/** 支持除了 completed 外的所有状态 */
+		var freeable=true;
 		choosedTasks.each(function(i,task){
 			var status=grid.getCellValue(PROPERTY_NAME_OF_STATUS, task);
-			assignableBatch=(assignableBatch && CELL_VALUE_OF_FREE_STATUS.equals(status, true, true));
-			disabledBatch=(disabledBatch && assignableBatch);
-			freeableBatch=(freeableBatch && (CELL_VALUE_OF_DOING_STATUS.equals(status, true, true) || CELL_VALUE_OF_VERIFYING_STATUS.equals(status, true, true)));
-			
-			if (!(assignableBatch && disabledBatch && freeableBatch))return false;
+			assignable=(assignable && STATUS_OF_FREE.equals(status, true, true));
+			disabled=assignable;
+			freeable=freeable&&!(STATUS_OF_COMPLETED.equals(status, true, true));
+			if (!(assignable || disabled || freeable))return false;
 		});
 
-		// 批量分配: 只有当所有选中的Task状态为FREE
-		// 批量废弃: 只有当所有选中的Task状态为FREE
-		if(!assignableBatch){
-			baseCtnr.find(".menu.assign_to").addClass(DISABLED);
-			baseCtnr.find(".menu.do_disabled").addClass(DISABLED);
-		}
+		if(!assignable)baseCtnr.find(".menu.assign_to").addClass(DISABLED);
+		if(!disabled)baseCtnr.find(".menu.do_disabled").addClass(DISABLED);
+		if(!freeable)baseCtnr.find(".menu.unassign").addClass(DISABLED);
 		
-		// 批量释放: 只有当搜索选中的Task状态为 DOING or VERIFYING 时
-		if(!freeableBatch){baseCtnr.find(".menu.unassign").addClass(DISABLED);}
-		
-		// 审核菜单
+		// 只能审核 VERIFYING 状态的一条任务记录
 		if (1 == taskIds.length){
 			var taskStatus = grid.getCellValue(PROPERTY_NAME_OF_STATUS, choosedTasks[0]);
-			// 只能审核 VERIFYING 状态的任务
-			var STATUS_OF_VERIFYING = "VERIFYING";
-			STATUS_OF_VERIFYING.notEquals(taskStatus, true, true) && baseCtnr.find(".menus .menu.verifying").addClass(DISABLED);
+			if (STATUS_OF_VERIFYING.notEquals(taskStatus, true, true)){
+				baseCtnr.find(".menus .menu.verifying").addClass(DISABLED);
+			}
 		} else {
 			baseCtnr.find(".menus .menu.verifying").addClass(DISABLED);
 		}
