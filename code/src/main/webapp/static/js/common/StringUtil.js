@@ -93,17 +93,25 @@ function StringUtil() {
 	 * @param str 目标字符串
 	 * @param maxLen 最大长度
 	 * @param suffix 后缀
+	 * @deprecated 当前接口已废弃, 当前接口容易让调用者混淆;
+	 * 	相同功能应调用{@link stringUtil.maxLen(String, Number, String)}
 	 */
 	this.setLength = function(str, maxLen, suffix) {
-		suffix = (suffix || "...");
+		return $thisObj.maxLen(str, maxLen, suffix);
+	}
+
+	/**
+	 * 设置字符串最大长度, 超出最大长度将使用后缀
+	 * @param str {String} 目标字符串
+	 * @param maxLen {Number} 最大长度
+	 * @param suffix {String} 后缀, Default(...)
+	 */
+	this.maxLen=function(str, maxLen, suffix){
+		suffix=suffix||"...", maxLen=maxLen||15;
 		var len=str.length, offset=suffix.length;
-		var maxLenLawful = (maxLen > 0) && (maxLen > offset);
-		if (maxLenLawful && $thisObj.isNotEmpty(str, true)) {
-			if (len > maxLen) {
-				return str.substring(0, maxLen-offset) + suffix;
-			}
-		} 
-		return str;
+		var maxLenLawful = (maxLen>0) && (maxLen>offset);
+		var tooLong = maxLenLawful && $thisObj.isNotEmpty(str, true) && len>maxLen;
+		return (tooLong?(str.substring(0, maxLen-offset)+suffix):str);
 	}
 	
 	/**

@@ -19,6 +19,7 @@
 
 .verifying_container {}
 .verifying_container .task_detail,
+.verifying_container .right,
 .verifying_container .fns_container {display:inline-block; height:300px; vertical-align:top;}
 
 .verifying_container .task_detail {width:75%;}
@@ -46,6 +47,10 @@
 .lager .left {width:70%;}
 .verifying_container .right {width:0;}
 .lager .right {width:29%; transition:width .5s;}
+
+.verifying_container .right .list li {list-style:none; padding:5px; border-bottom:1px solid #AAA;}
+.verifying_container .right .list li:hover {color:#F00; background-color:#EEE;}
+.verifying_container .right .list li .sql_preview {display:inline-block; width:18px; height:18px; background:url("../image/taskManager/sql_preview.ico") no-repeat; float:right; cursor:pointer;}
 
 .task_manager_container .menus .menu {}
 

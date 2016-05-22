@@ -30,6 +30,7 @@ function TaskManagerFn() {
 	
 	var $thisObj = this;
 	var baseCtnr = $(".task_manager_container");
+	$thisObj.ATTACHMENT_DECISION_TABLES_FOR_VERIFYING=null;
 	
 	var pager = new Pager(baseCtnr.find(".grid_pager"), TaskManagerDebug);
 	var grid = new DataGrid(baseCtnr.find(".data_grid"), true);
@@ -107,21 +108,77 @@ function TaskManagerFn() {
 	// 审核时, 右侧功能激活事件
 	function activeVerifyingFn($this, $jc, taskId){
 		var verifyingCtnr=$jc.contentDiv;
-		var jcBoxCtnr=$jc.$el.find(".jconfirm-box-container");
 		var rightCtnr=verifyingCtnr.find(".right");
+		var jcBoxCtnr=$jc.$el.find(".jconfirm-box-container");
 		
 		if($this.hasClass(CLASS_ACTIVE)){showRightCtnr($this, jcBoxCtnr, rightCtnr);return;}
 		else {hideRightCtnr($this, jcBoxCtnr, rightCtnr);}
 
-		// TODO 请求列表数据
-		rightCtnr.find(".title").html($this.attr("to-title"));
+		// 请求列表数据
 		requestUtil.jsonAjax({
 			url : $this.attr("url-data"),
 			data : {taskId:taskId},
 			success : function(rData){
+				if (!rData.flag){$.jc.warning(rData.message); return;}
+				rightCtnr.find(".list").html("");
+				if (0>=rData.data.length){rightCtnr.append($("<li/>").append($.getNoRecordFound())); return;}
+				
+				handleAttachmentsData($this, $this.attr("handler"), rData.data);
 			},
 			error : function(){$.jc.error();}
 		});
+	}
+	
+	// 处理附属说明数据
+	function handleAttachmentsData(trigger, handlerName, data){
+		// 获取决策(函数)表
+		var attachmentDT = getAttachmentDecisionTables(trigger);
+		// 获取决策函数
+		var decisionFn = ognlUtil.getValue(attachmentDT, handlerName);
+		// 如果决策函数存在
+		if (decisionFn instanceof Function){
+			// 调用函数, 处理数据
+			decisionFn(data);
+		} else {
+			// 决策函数不存在, 打印错误消息
+			$.jc.warning("Cann't support handler["+handlerName+"]");
+		}
+	}
+	
+	// 获取附属信息决策表
+	function getAttachmentDecisionTables(trigger){
+		if ($thisObj.ATTACHMENT_DECISION_TABLES_FOR_VERIFYING) return $thisObj.ATTACHMENT_DECISION_TABLES_FOR_VERIFYING;
+		
+		var ul=trigger.parent(), fnsCtnr=ul.parent(), leftCtnr=fnsCtnr.parent(), spliterCtnr=leftCtnr.parent();
+		var rightCtnr = spliterCtnr.find(".right");
+		rightCtnr.find(".title").html(trigger.attr("to-title"));
+		
+		var createItem=function(itemId, name, title){return $("<li/>",{itemId:itemId, html:name, title:title});};
+		var itemCtnr=rightCtnr.find(".list");
+		$thisObj.ATTACHMENT_DECISION_TABLES_FOR_VERIFYING={
+			issue : function(issueArr){
+				$.jc.warning("Handling issue data...");
+			},
+			file : {
+				sql : function(sqlAttachmens){
+					sqlAttachmens.each(function(data){
+						var text = stringUtil.maxLen(data["name"], 15);
+						var item=createItem(data["id"], text, text).appendTo(itemCtnr);
+						$("<div/>",{title:"Preview"}).addClass("sql_preview").appendTo(item).click(previewSqlFileContent);
+					});
+				},
+				other : function(otherAttachmens){
+					$.jc.warning("Handling issue attachments...");
+				}
+			}
+		};
+		
+		return $thisObj.ATTACHMENT_DECISION_TABLES_FOR_VERIFYING;
+	}
+	
+	// TODO SQL文件内容预览事件
+	function previewSqlFileContentEvent(){
+		
 	}
 	
 	// 隐藏右边的容器

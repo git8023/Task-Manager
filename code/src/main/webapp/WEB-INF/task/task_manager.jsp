@@ -143,9 +143,9 @@
                         
                         <div class="fns_container">
                             <ul>
-                                <li class="fn" to-title="Issue" url-data="task/getIssues.cmd">Issues</li>
-                                <li class="fn" to-title="SQL Files" url-data="task/getSqlAttachmentFiles.cmd">SQL Files</li>
-                                <li class="fn" to-title="Other Files" url-data="task/getOtherFiles.cmd">Other Files</li>
+                                <li class="fn" handler="issue" to-title="Issue" url-data="task/getIssues.cmd">Issues</li>
+                                <li class="fn" handler="file.sql" to-title="SQL Files" url-data="task/getSqlAttachmentFiles.cmd">SQL Files</li>
+                                <li class="fn" handler="file.other" to-title="Other Files" url-data="task/getOtherFiles.cmd">Other Files</li>
                             </ul>
                         </div>
                     </div>
