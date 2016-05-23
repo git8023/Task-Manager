@@ -5,7 +5,7 @@ import java.util.Date;
 
 /**
  * @Author Huang.Yong
- * @Description: 任务附件
+ * @Description: 任务附件. <b> [ 附件数据类型设计的有问题, 无法获取当前附件是什么类型, 导致获取附件文件时较为复杂 ] </b>
  * @Date 2016年3月27日 下午12:04:19
  * @Version 0.1
  */

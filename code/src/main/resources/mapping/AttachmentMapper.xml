@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.yong.tm.dao.AttachmentDao">
+    
+    <!-- 附件字段映射 -->
+    <resultMap type="attachment" id="mapOfAttachment">
+        <id     column="id"             property="id" />
+        <result column="name"           property="name" />
+        <result column="sql_path"       property="sqlPath" />
+        <result column="image_path"     property="imagePath" />
+        <result column="other_path"     property="otherPath" />
+        <result column="summary"        property="summary" />
+        <result column="created_date"   property="createdDate" />
+        
+        <association property="userTask" javaType="userTask">
+            <id     column="user_task_id"   property="id" />
+        </association>
+    </resultMap>
+    
+    <!-- 查询附件数据, 指定附件ID -->
+    <select id="selectById" parameterType="int" resultMap="mapOfAttachment">
+        SELECT
+            attachment.id,
+            attachment.`name`,
+            attachment.user_task_id,
+            attachment.sql_path,
+            attachment.image_path,
+            attachment.other_path,
+            attachment.summary,
+            attachment.created_date
+        FROM
+            attachment
+        WHERE
+            attachment.id = #{attachmentId}
+    </select>
+    
+</mapper>

@@ -52,6 +52,9 @@
 .verifying_container .right .list li:hover {color:#F00; background-color:#EEE;}
 .verifying_container .right .list li .sql_preview {display:inline-block; width:18px; height:18px; background:url("../image/taskManager/sql_preview.ico") no-repeat; float:right; cursor:pointer;}
 
+
+.preview_content {resize:none; width:100%; height:240px; border:1px solid #EEE; background-color:#F2F2F2; padding:5px; overflow:auto; display:inline-block; white-space:pre-wrap;}
+
 .task_manager_container .menus .menu {}
 
 .task_manager_container .title .grid_pager {}

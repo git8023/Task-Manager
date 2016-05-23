@@ -5,6 +5,7 @@ import java.util.List;
 import org.yong.tm.exception.VerifyParameterException;
 import org.yong.tm.model.entities.Attachment;
 import org.yong.tm.model.entities.UserTask;
+import org.yong.tm.model.enums.AttachmentType;
 import org.yong.util.page.Page;
 import org.yong.util.page.PageCondition;
 
@@ -112,4 +113,14 @@ public interface UserTaskService {
 	 * @throws VerifyParameterException
 	 */
 	List<Attachment> getSQLFilesByTaskId(Integer taskId) throws VerifyParameterException;
+
+	/**
+	 * @Title: getAttachmentContent
+	 * @Description: 获取附件内容(查阅可以将附件内容转换为字符串的附件类型).
+	 * @param attachmentType 附件类型
+	 * @param attachmentId 附件ID
+	 * @return String 附件内容, 如果内容不可转为字符串总是返回<i>null<i>
+	 * @throws VerifyParameterException
+	 */
+	String getAttachmentContent(AttachmentType attachmentType, Integer attachmentId) throws VerifyParameterException;
 }

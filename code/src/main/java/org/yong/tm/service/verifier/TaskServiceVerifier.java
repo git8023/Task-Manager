@@ -50,7 +50,7 @@ public class TaskServiceVerifier implements TaskService {
 	public boolean addTask(Task task, User createdBy) throws VerifyParameterException {
 		String errMsg = null;
 		if (null == task) {
-			errMsg = "Access Denied.";
+			errMsg = TMConstants.ACCESS_DENIED_OF_PARAMETERS + "[Task Details]";
 		} else {
 			Module module = task.getModule();
 			if (null == module || 0 >= module.getId()) {

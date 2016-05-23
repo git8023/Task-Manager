@@ -11,6 +11,7 @@ import org.yong.tm.dao.UserTaskDao;
 import org.yong.tm.exception.VerifyParameterException;
 import org.yong.tm.model.entities.Attachment;
 import org.yong.tm.model.entities.UserTask;
+import org.yong.tm.model.enums.AttachmentType;
 import org.yong.tm.service.iface.UserTaskService;
 import org.yong.tm.util.TMConstants;
 import org.yong.util.page.Page;
@@ -157,6 +158,23 @@ public class UserTaskServiceVerifier implements UserTaskService {
 		}
 		throwException(errMsg);
 		return userTaskServiceImpl.getSQLFilesByTaskId(taskId);
+	}
+
+	@Override
+	public String getAttachmentContent(AttachmentType attachmentType, Integer attachmentId) throws VerifyParameterException {
+		String errMsg = null;
+		if (null == attachmentType) {
+			errMsg = TMConstants.ACCESS_DENIED_OF_PARAMETERS + "[Attachment-Type]";
+		} else {
+			if (!AttachmentType.contentToString(attachmentType)) {
+				errMsg = TMConstants.ACCESS_DENIED + ", Cann't support the Attachment-Type";
+			} else if (null == attachmentId || 0 >= attachmentId) {
+				errMsg = TMConstants.ACCESS_DENIED_OF_PARAMETERS + "[Attachment Primary-Key]";
+			}
+		}
+
+		throwException(errMsg);
+		return userTaskServiceImpl.getAttachmentContent(attachmentType, attachmentId);
 	}
 
 	/**

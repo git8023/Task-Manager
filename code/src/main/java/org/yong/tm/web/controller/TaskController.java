@@ -27,6 +27,7 @@ import org.yong.tm.model.entities.Attachment;
 import org.yong.tm.model.entities.Task;
 import org.yong.tm.model.entities.User;
 import org.yong.tm.model.entities.UserTask;
+import org.yong.tm.model.enums.AttachmentType;
 import org.yong.tm.model.enums.TaskStatus;
 import org.yong.tm.model.vo.InitTaskSearchConditionVO;
 import org.yong.tm.model.vo.TaskSearchCondition;
@@ -651,6 +652,35 @@ public class TaskController {
 		} catch (Exception e) {
 			flag = false;
 			message = "Get SQL files error";
+			LOGGER.warn(message + " : " + e.getMessage(), e);
+		}
+
+		return WebUtil.getModelMap(flag, data, message);
+	}
+
+	/**
+	 * @Title: previewAttachment
+	 * @Description: 预览附件
+	 * @param attachmentType 附件类型
+	 * @param attachmentId 附件ID
+	 * @return ModelMap flag:true-获取预览数据成功,false-获取预览数据失败; message:失败消息;
+	 *         data:预览数据
+	 */
+	@RequestMapping("/previewAttachment")
+	@ResponseBody
+	public ModelMap previewAttachment(AttachmentType attachmentType, Integer attachmentId) {
+		boolean flag = false;
+		String message = null;
+		String data = null;
+
+		try {
+			data = userTaskService.getAttachmentContent(attachmentType, attachmentId);
+			flag = true;
+		} catch (VerifyParameterException e) {
+			message = e.getMessage();
+		} catch (Exception e) {
+			flag = false;
+			message = "Get the attachment preview content error";
 			LOGGER.warn(message + " : " + e.getMessage(), e);
 		}
 

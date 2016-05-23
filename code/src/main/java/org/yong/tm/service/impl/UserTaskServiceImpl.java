@@ -1,14 +1,21 @@
 package org.yong.tm.service.impl;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.yong.tm.dao.AttachmentDao;
 import org.yong.tm.dao.TaskDao;
 import org.yong.tm.dao.UserTaskDao;
 import org.yong.tm.model.entities.Attachment;
 import org.yong.tm.model.entities.UserTask;
+import org.yong.tm.model.enums.AttachmentType;
 import org.yong.tm.model.enums.TaskStatus;
 import org.yong.tm.service.iface.UserTaskService;
 import org.yong.util.file.FileUtil;
@@ -28,11 +35,16 @@ import com.google.common.collect.Lists;
 @Service
 public class UserTaskServiceImpl implements UserTaskService {
 
+	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
+
 	@Autowired
 	private UserTaskDao userTaskDao;
 
 	@Autowired
 	private TaskDao taskDao;
+
+	@Autowired
+	private AttachmentDao attachmentDao;
 
 	@Override
 	public boolean saveAttachments(List<Attachment> accessories, Integer taskId, String account) {
@@ -142,5 +154,26 @@ public class UserTaskServiceImpl implements UserTaskService {
 	@Override
 	public List<Attachment> getSQLFilesByTaskId(Integer taskId) {
 		return userTaskDao.selectSqlAttachmentByTaskId(taskId);
+	}
+
+	@Override
+	public String getAttachmentContent(AttachmentType attachmentType, Integer attachmentId) {
+		// 获取附件对象
+		Attachment attachment = attachmentDao.selectById(attachmentId);
+
+		// 获取附件文件对象
+		File attachmentFile = attachmentType.getFile(attachment);
+
+		// 将附件文件对象转换为字符串
+		String content = null;
+		if (null != attachmentFile) {
+			// 返回结果(转换后的数据)
+			try {
+				content = FileUtils.readFileToString(attachmentFile);
+			} catch (IOException e) {
+				LOGGER.warn("Reading the attachment[" + attachmentType + "] file content error:" + e.getMessage(), e);
+			}
+		}
+		return content;
 	}
 }

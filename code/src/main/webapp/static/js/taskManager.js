@@ -164,7 +164,7 @@ function TaskManagerFn() {
 					sqlAttachmens.each(function(data){
 						var text = stringUtil.maxLen(data["name"], 15);
 						var item=createItem(data["id"], text, text).appendTo(itemCtnr);
-						$("<div/>",{title:"Preview"}).addClass("sql_preview").appendTo(item).click(previewSqlFileContent);
+						$("<div/>",{title:"Preview"}).addClass("sql_preview").appendTo(item).click(previewSqlFileContentEvent);
 					});
 				},
 				other : function(otherAttachmens){
@@ -178,7 +178,23 @@ function TaskManagerFn() {
 	
 	// TODO SQL文件内容预览事件
 	function previewSqlFileContentEvent(){
-		
+//		$.jc.warning("Please waiting...previewSqlFileContentEvent");
+		var $this = $(this);
+		var attachmentId=$this.parent().attr("itemId");
+		var jc=$.jc.info("");
+		requestUtil.jsonAjax({
+			url : "task/previewAttachment.cmd",
+			data : {attachmentType:"SQL", attachmentId:attachmentId},
+			success : function(rData){
+				if(!rData.flag){$.jc.warning(rData.message, function(){jc.close();}); return;}
+				
+				var sqlContent=rData.data;
+				var previewContent=$("<pre/>",{readonly:"readonly"}).addClass("preview_content prettyPrint").text(sqlContent);
+				jc.setContent(previewContent);
+				prettyPrint();
+			},
+			error : function(){$.jc.error();}
+		});
 	}
 	
 	// 隐藏右边的容器

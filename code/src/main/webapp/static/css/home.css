@@ -7,6 +7,8 @@ body {
 	-khtml-user-select: none; /*早期浏览器*/
 	user-select: none;
 }
+/* 去除浏览器对表单项的默认焦点样式 */
+input, text, button, * {outline:none;}
 
 /* .row {margin-bottom:10px;} */
 .fl_r {float:right;}
