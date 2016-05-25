@@ -14,12 +14,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
     <title>title</title>
-    
-<%--     <link rel="stylesheet" type="text/css" href="<%=basePath %>static/js/common/googlePretifyPrint/prettify.css" /> --%>
     <link rel="stylesheet" type="text/css" href="<%=basePath %>static/css/task_manager.css" />
-    
-<%--     <script type="text/javascript" src="<%=basePath %>static/js/common/googlePretifyPrint/prettify.js"></script> --%>
-<%--     <script type="text/javascript" src="<%=basePath %>static/js/common/googlePretifyPrint/run_prettify.js"></script> --%>
     <script type="text/javascript" src="<%=basePath %>static/js/taskManager.js"></script>
 </head>
 <body>

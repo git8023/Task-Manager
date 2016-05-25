@@ -173,6 +173,22 @@ Array.prototype.each = function(callback, begin) {
 };
 
 /**
+ * 查找数组元素
+ * @param val 需要匹配的值
+ * @param key {String|undefined}-数组元素属性值, 如果当前值未定义则匹配规则为: <i>arr[idx]=val</i>
+ * @returns {Object}-匹配成功的元素
+ */
+Array.prototype.find=function(val, key){
+	var el=null, finded=false;
+	this.length && this.each(function(v){
+		if(key){if(val===v[key]){el=v; finded=true;}}
+		else if(val==v){el=v; finded=true;}
+		if(finded) return false;
+	});
+	return el;
+}
+
+/**
  * 获取数组最后一个元素
  */
 Array.prototype.end=function(){return this.length?this[this.length-1]:undefined;};

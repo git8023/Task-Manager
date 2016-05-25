@@ -1,0 +1,12 @@
+@CHARSET "UTF-8";
+
+.preview_container.max {position:fixed; top:0; left:0; height:100%; width:101.5%; overflow:auto;}
+.preview_container pre::-webkit-scrollbar {width:5px;}
+.preview_container pre::-webkit-scrollbar-thumb {background-color:#AAA; border-radius:15px;}
+
+.preview_container {height:300px;}
+.preview_container pre {white-space:pre; overflow:auto; height:100%; display:block;}
+
+.preview_container pre .pln {color:#5B91BC;}
+.preview_container pre .str {color:#C05050;}
+.preview_container pre chars .str {color:#A6B120;}

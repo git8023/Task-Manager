@@ -156,10 +156,14 @@ function TaskManagerFn() {
 		var createItem=function(itemId, name, title){return $("<li/>",{itemId:itemId, html:name, title:title});};
 		var itemCtnr=rightCtnr.find(".list");
 		$thisObj.ATTACHMENT_DECISION_TABLES_FOR_VERIFYING={
+			// ISSUE 列表展示
 			issue : function(issueArr){
 				$.jc.warning("Handling issue data...");
 			},
+			
+			// 文件附件列表展示
 			file : {
+				// SQL 附件展示
 				sql : function(sqlAttachmens){
 					sqlAttachmens.each(function(data){
 						var text = stringUtil.maxLen(data["name"], 15);
@@ -167,6 +171,7 @@ function TaskManagerFn() {
 						$("<div/>",{title:"Preview"}).addClass("sql_preview").appendTo(item).click(previewSqlFileContentEvent);
 					});
 				},
+				// 其他附件展示
 				other : function(otherAttachmens){
 					$.jc.warning("Handling issue attachments...");
 				}
@@ -178,22 +183,15 @@ function TaskManagerFn() {
 	
 	// TODO SQL文件内容预览事件
 	function previewSqlFileContentEvent(){
-//		$.jc.warning("Please waiting...previewSqlFileContentEvent");
 		var $this = $(this);
 		var attachmentId=$this.parent().attr("itemId");
 		var jc=$.jc.info("");
-		requestUtil.jsonAjax({
-			url : "task/previewAttachment.cmd",
+		requestUtil.ajax({
+			url : "task/previewAttachment2.cmd",
 			data : {attachmentType:"SQL", attachmentId:attachmentId},
-			success : function(rData){
-				if(!rData.flag){$.jc.warning(rData.message, function(){jc.close();}); return;}
-				
-				var sqlContent=rData.data;
-				var previewContent=$("<pre/>",{readonly:"readonly"}).addClass("preview_content prettyPrint").text(sqlContent);
-				jc.setContent(previewContent);
-				prettyPrint();
-			},
-			error : function(){$.jc.error();}
+			dataType : "html",
+			success : function(html){jc.setContent(html);},
+			error : function(args){$.jc.error();}
 		});
 	}
 	

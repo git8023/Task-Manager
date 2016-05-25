@@ -688,6 +688,41 @@ public class TaskController {
 	}
 
 	/**
+	 * @Title: previewAttachment2
+	 * @Description: 预览附件
+	 * @param attachmentType 附件类型
+	 * @param attachmentId 附件ID
+	 * @return ModelMap flag:true-获取预览数据成功,false-获取预览数据失败; message:失败消息;
+	 *         data:预览数据
+	 */
+	@RequestMapping("/previewAttachment2")
+	public String previewAttachment2(AttachmentType attachmentType, Integer attachmentId) {
+		boolean flag = false;
+		String message = null;
+		String data = null;
+
+		try {
+			data = userTaskService.getAttachmentContent(attachmentType, attachmentId);
+			flag = true;
+		} catch (VerifyParameterException e) {
+			message = e.getMessage();
+		} catch (Exception e) {
+			flag = false;
+			message = "Get the attachment preview content error";
+			LOGGER.warn(message + " : " + e.getMessage(), e);
+		}
+
+		if (flag) {
+			WebUtil.setRequestAttr(TMConstants.REQUEST_TEXT_CONTENT, data);
+			WebUtil.setRequestAttr(TMConstants.REQUEST_ATTACHMENT_TYPE, attachmentType);
+			return "task/preview";
+		} else {
+			WebUtil.setRequestAttr(TMConstants.REQUEST_ERROR_MESSAGE, message);
+			return TMConstants.URL_ERROR_PAGE;
+		}
+	}
+
+	/**
 	 * @Title: downloadAttachments
 	 * @Description: 打包下载附件
 	 * @param attachments 附件对象列表

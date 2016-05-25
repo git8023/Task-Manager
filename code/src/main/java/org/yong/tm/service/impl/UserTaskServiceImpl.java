@@ -166,7 +166,7 @@ public class UserTaskServiceImpl implements UserTaskService {
 
 		// 将附件文件对象转换为字符串
 		String content = null;
-		if (null != attachmentFile) {
+		if (attachmentFile.exists()) {
 			// 返回结果(转换后的数据)
 			try {
 				content = FileUtils.readFileToString(attachmentFile);
