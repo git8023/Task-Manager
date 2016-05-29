@@ -37,7 +37,8 @@
             </div>
         </div>
         
-        <div class="title">Task List
+        <div class="title">
+            <span>Task List</span>
             <div class="grid_pager pager_h25" 
                 url="task/searchTaskListForManager.cmd"
                 current="1"
@@ -134,7 +135,7 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="col-sm-12">
-                                        <textarea name="note" class="form-control" cols="30" rows="10" disabled="disabled"></textarea>
+                                        <textarea name="note" class="form-control" cols="30" rows="11" disabled="disabled"></textarea>
                                     </div>
                                 </div>
                             </form>
@@ -142,7 +143,7 @@
                         
                         <div class="fns_container">
                             <ul>
-                                <li class="fn" handler="issue" to-title="Issue" url-data="task/getIssues.cmd">Issues</li>
+                                <li class="fn" handler="issue" to-title="Issue" url-data="issue/getIssues.cmd">Issues</li>
                                 <li class="fn" handler="file.sql" to-title="SQL Files" url-data="task/getSqlAttachmentFiles.cmd">SQL Files</li>
                                 <li class="fn" handler="file.other" to-title="Other Files" url-data="task/getOtherFiles.cmd">Other Files</li>
                             </ul>
@@ -153,11 +154,7 @@
                     <div class="right hidden">
                         <div class="title">To Tile</div>
                         <ul class="list">
-                            <li>Item_Name_1</li>
-                            <li>Item_Name_2</li>
-                            <li>Item_Name_3</li>
-                            <li>Item_Name_4</li>
-                            <li>Item_Name_5</li>
+                            <li>No Recourd Found</li>
                         </ul>
                     </div>
                 </div>

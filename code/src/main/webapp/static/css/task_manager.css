@@ -6,16 +6,16 @@
 
 .task_manager_container {}
 .task_manager_container .src {display:none;}
-.task_manager_container .grid_pager {display:inline-block; float:right;}
-.task_manager_container .title {padding: 2px!important;
-    margin: 0;
-    background-color: #499AB2;
-    color: #FFF;
-    font-size: 14px!important;
-    line-height: 25px!important;
-    padding-left: 5px!important;
-    margin-top: 5px;
-}
+/* .task_manager_container .grid_pager {display:inline-block; float:right;} */
+/* .task_manager_container .title {padding: 2px!important; */
+/*     margin: 0; */
+/*     background-color: #499AB2; */
+/*     color: #FFF; */
+/*     font-size: 14px!important; */
+/*     line-height: 25px!important; */
+/*     padding-left: 5px!important; */
+/*     margin-top: 5px; */
+/* } */
 
 .verifying_container {}
 .verifying_container .task_detail,
@@ -43,20 +43,19 @@
 .verifying_container .fns_container ul li.active {position:relative; margin-left:7px; width:100%; background-color:#DFE290; border-radius:0;}
 
 .lager .left,
-.lager .right {display:inline-block; vertical-align:top; padding:5px; border:1px solid #EEE;}
+.lager .right {display:inline-block; vertical-align:top; padding:5px; border:1px solid #EEE; height:300px;}
 .lager .left {width:70%;}
 .verifying_container .right {width:0;}
 .lager .right {width:29%; transition:width .5s;}
 
-.verifying_container .right .list li {list-style:none; padding:5px; border-bottom:1px solid #AAA;}
+.verifying_container .right .list li {list-style:none; padding:5px; border-bottom:1px solid #AAA; overflow:hidden; text-overflow:ellipsis; position:relative;}
 .verifying_container .right .list li:hover {color:#F00; background-color:#EEE;}
-.verifying_container .right .list li .sql_preview {display:inline-block; width:18px; height:18px; background:url("../image/taskManager/sql_preview.ico") no-repeat; float:right; cursor:pointer;}
+.verifying_container .right .list li .sql_preview {display:none; position:absolute; right:2px; top:6px; width:18px; height:18px; background:url("../image/taskManager/sql_preview.ico") no-repeat; cursor:pointer;}
+.verifying_container .right .list li:hover .sql_preview {display:inline-block; }
 
 
 .preview_content {resize:none; width:100%; height:240px; border:1px solid #EEE; background-color:#F2F2F2; padding:5px; overflow:auto; display:inline-block; white-space:pre-wrap;}
 
 .task_manager_container .menus .menu {}
-
-.task_manager_container .title .grid_pager {}
 
 .task_manager_container .data_grid {}

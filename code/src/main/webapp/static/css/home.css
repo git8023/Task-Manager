@@ -73,7 +73,8 @@ a.disabled:link {cursor:no-drop; color:#999; text-decoration:none;}
 .jconfirm.white .jconfirm-box .confrim_closer:hover {color:#AAA;}
 .jconfirm.white .jconfirm-box .title,
 .jconfirm.white .jconfirm-box .content{border-bottom:2px solid #EEE}
-.jconfirm.white .jconfirm-box .content .title {position:relative; background-color:#499AB2; font-size:16px; line-height:16px; font-weight:bold; color:#FFF; clear:both; /* margin-top:5px; */}
+.jconfirm.white .jconfirm-box .content .title {position:relative; background-color:#499AB2; font-size:16px; line-height:16px; font-weight:bold; color:#FFF; clear:both;}
+.jconfirm.white .jconfirm-box .content .title .grid_pager {position:absolute; top:3px; right:3px;}
 
 /* 重写Pager样式 */
 .jconfirm.white .pager_h25 .pg_container {height:25px;line-height:25px; font-size:14px;}
@@ -108,7 +109,7 @@ a.disabled:link {cursor:no-drop; color:#999; text-decoration:none;}
 .main_body .projects>.title {text-align:left!important; padding-left:23px; background:url("../image/projects.ico") no-repeat 5px 5px;}
 .main_body .projects .items {max-height:565px; overflow:auto;}
 .main_body .projects .items .item {text-align:left;}
-.main_body .projects .items .item .name {background-color:#BCE8F1; font-weight:bold; padding:2px; cursor:pointer; height:30px; line-height:30px; padding-left:20px; border-bottom:2px solid #AAA;}
+.main_body .projects .items .item .name {background-color:#BCE8F1; font-weight:bold; padding:2px; cursor:pointer; height:30px; line-height:30px; padding-left:20px; border-bottom:2px solid #AAA; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 .main_body .projects .items .item .name:hover {color:#F00;}
 .main_body .projects .items .item .name>img {margin:3px 3px 4px 0;}
 .main_body .projects .items .item .module {background-color:#EEE; cursor:pointer; padding:2px;  border-right:2px solid #EEE; padding-left:40px;}

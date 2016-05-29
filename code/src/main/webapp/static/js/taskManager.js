@@ -153,22 +153,30 @@ function TaskManagerFn() {
 		var rightCtnr = spliterCtnr.find(".right");
 		rightCtnr.find(".title").html(trigger.attr("to-title"));
 		
-		var createItem=function(itemId, name, title){return $("<li/>",{itemId:itemId, html:name, title:title});};
+		/** 右侧项列表容器 */
 		var itemCtnr=rightCtnr.find(".list");
 		$thisObj.ATTACHMENT_DECISION_TABLES_FOR_VERIFYING={
-			// ISSUE 列表展示
+			// TODO ISSUE 列表展示
 			issue : function(issueArr){
-				$.jc.warning("Handling issue data...");
+				addItemsToCtnr(issueArr, "ISSUE", itemCtnr, function(){
+					var $this=$(this), 
+						param={issueId:$this.parent().attr("itemId")};
+					
+					previewEvent($this, "issue/viewDetail.cmd", param);
+				});
 			},
 			
 			// 文件附件列表展示
 			file : {
 				// SQL 附件展示
 				sql : function(sqlAttachmens){
-					sqlAttachmens.each(function(data){
-						var text = stringUtil.maxLen(data["name"], 15);
-						var item=createItem(data["id"], text, text).appendTo(itemCtnr);
-						$("<div/>",{title:"Preview"}).addClass("sql_preview").appendTo(item).click(previewSqlFileContentEvent);
+					addItemsToCtnr(sqlAttachmens, "SQL", itemCtnr, function(){
+						var $this=$(this), 
+							param={
+								attachmentType:$this.attr("attachmentType"),
+								attachmentId:$this.parent().attr("itemId")
+							};
+						previewEvent($this, "task/previewAttachment2.cmd", param);
 					});
 				},
 				// 其他附件展示
@@ -181,17 +189,38 @@ function TaskManagerFn() {
 		return $thisObj.ATTACHMENT_DECISION_TABLES_FOR_VERIFYING;
 	}
 	
-	// TODO SQL文件内容预览事件
-	function previewSqlFileContentEvent(){
-		var $this = $(this);
-		var attachmentId=$this.parent().attr("itemId");
-		var jc=$.jc.info("");
+	// 添加项到预览列表
+	function addItemsToCtnr(dataArr, attachmentType, itemCtnr, previewEvent){
+		dataArr.each(function(data){
+			var name=data["name"];
+			var item=createItem(data["id"], name, name).appendTo(itemCtnr);
+			if (previewEvent instanceof Function) {
+				$("<div/>",{
+					title:"Preview", 
+					attachmentType:attachmentType
+				}).addClass("sql_preview").appendTo(item).click(previewEvent);
+			}
+		});
+	}
+	
+	// 创建附件项
+	function createItem(itemId, name, title){return $("<li/>",{itemId:itemId, html:name, title:title});};
+	
+	/**
+	 * 预览事件
+	 * @param $this {jQuery} 预览控件
+	 * @param url {String} 预览请求地址
+	 * @param param {Object} 请求参数
+	 */
+	function previewEvent($this, url, param){
+		param=param||{};
+		var jc=$.jc.info("Loading...");
 		requestUtil.ajax({
-			url : "task/previewAttachment2.cmd",
-			data : {attachmentType:"SQL", attachmentId:attachmentId},
-			dataType : "html",
-			success : function(html){jc.setContent(html);},
-			error : function(args){$.jc.error();}
+			url:url, 
+			data:param, 
+			dataType:"html", 
+			success:function(html){jc.setContent(html);}, 
+			error:function(args){$.jc.error();}
 		});
 	}
 	

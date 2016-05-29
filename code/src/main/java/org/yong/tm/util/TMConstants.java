@@ -19,6 +19,9 @@ public abstract class TMConstants {
 	/** 消息提醒: 请求拒绝 */
 	public static final String ACCESS_DENIED_OF_PARAMETERS = ACCESS_DENIED + ", Missing requirement parameters";
 
+	/** 附件类型关键字: ISSUE */
+	public static final String ATTACHMENT_TYPE_OF_ISSUE = "ISSUE";
+
 	/** 任意文件保存路径 */
 	public static final String DIRECTORY_ANY = "any/";
 

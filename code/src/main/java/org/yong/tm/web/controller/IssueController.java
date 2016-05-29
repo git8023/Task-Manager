@@ -208,6 +208,39 @@ public class IssueController {
 	}
 
 	/**
+	 * @Title: viewDetail
+	 * @Description: 展示详情视图
+	 * @param issueId Issue ID
+	 * @return String 详情视图逻辑视图
+	 */
+	@RequestMapping("/viewDetail")
+	public String viewDetail(Integer issueId) {
+		boolean flag = false;
+		String message = null;
+		Issue data = null;
+
+		try {
+			data = issueService.getDetailById(issueId);
+			flag = true;
+		} catch (VerifyParameterException e) {
+			message = e.getMessage();
+		} catch (Exception e) {
+			flag = false;
+			message = "View detail error";
+			LOGGER.warn(message + " : " + e.getMessage(), e);
+		}
+
+		if (flag) {
+			WebUtil.setRequestAttr(TMConstants.REQUEST_TEXT_CONTENT, data);
+			WebUtil.setRequestAttr(TMConstants.REQUEST_ATTACHMENT_TYPE, TMConstants.ATTACHMENT_TYPE_OF_ISSUE);
+			return "task/preview_issue";
+		} else {
+			WebUtil.setRequestAttr(TMConstants.REQUEST_ERROR_MESSAGE, message);
+			return TMConstants.URL_ERROR_PAGE;
+		}
+	}
+
+	/**
 	 * @Title: transferToWord
 	 * @Description: Issue转换为Word对象
 	 * @param issue Issue对象

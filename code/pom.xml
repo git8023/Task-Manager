@@ -176,6 +176,11 @@
             <artifactId>poi-ooxml</artifactId>
             <version>3.14</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.4</version>
+        </dependency>
         <!-- Apache 开源工具 -->
         
 <!--         <dependency> -->
