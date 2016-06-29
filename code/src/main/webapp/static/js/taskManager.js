@@ -93,9 +93,9 @@ function TaskManagerFn() {
 			success : function(rData){
 				if(!rData.flag){$.jc.warning(rData.message); return;}
 				
-				var verifyingCtnr=baseCtnr.find(".verifying_container");
+				var verifyingCtnr=baseCtnr.find(".verifying_container").getHTML();
 				jc.setContent(verifyingCtnr);
-				var form = new Form(verifyingCtnr, TaskManagerDebug);
+				var form = new Form(jc.contentDiv.find(".verifying_container"), TaskManagerDebug);
 				form.fillForm({data:rData.data});
 				
 				// 为动态添加的元素绑定事件
@@ -160,9 +160,8 @@ function TaskManagerFn() {
 			issue : function(issueArr){
 				addItemsToCtnr(issueArr, "ISSUE", itemCtnr, function(){
 					var $this=$(this), 
-						param={issueId:$this.parent().attr("itemId")};
-					
-					previewEvent($this, "issue/viewDetail.cmd", param);
+						param={issueId:$this.parent().attr("itemId"), url:"task/preview_issue"};
+					previewEvent($this, "view.cmd", param);
 				});
 			},
 			

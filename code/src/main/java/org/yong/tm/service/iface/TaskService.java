@@ -96,4 +96,13 @@ public interface TaskService {
 	 */
 	InitTaskSearchConditionVO getInitTaskSearchCondition(Integer moduleId) throws VerifyParameterException;
 
+	/**
+	 * @Title: isAssigned
+	 * @Description: 校验指定任务是否已经被分配
+	 * @param taskId 任务ID
+	 * @return Boolean true-已被分配, false-没有被分配
+	 * @throws VerifyParameterException
+	 */
+	Boolean isAssigned(Integer taskId) throws VerifyParameterException;
+
 }

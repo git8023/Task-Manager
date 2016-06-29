@@ -149,6 +149,17 @@ public class TaskServiceVerifier implements TaskService {
 		return taskServiceImpl.getInitTaskSearchCondition(moduleId);
 	}
 
+	@Override
+	public Boolean isAssigned(Integer taskId) throws VerifyParameterException {
+		String errMsg = null;
+		if (null == taskId || 0 >= taskId) {
+			errMsg = TMConstants.ACCESS_DENIED_OF_PARAMETERS + "[Task Primary-Key]";
+		}
+		throwException(errMsg);
+
+		return taskServiceImpl.isAssigned(taskId);
+	}
+
 	/**
 	 * @Title: throwException
 	 * @Description: 抛出参数验证异常

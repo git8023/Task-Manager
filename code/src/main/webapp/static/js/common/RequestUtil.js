@@ -10,9 +10,7 @@ function __RequestUtil() {
 	$thisObj.debug = true;
 	/**
 	 * jQuery ajax请求
-	 * 
-	 * @param param
-	 *            参数配置(与jQuery.ajax保持一致)
+	 * @param param 参数配置(与jQuery.ajax保持一致)
 	 */
 	this.ajax = function(param) {
 		// 参数修复

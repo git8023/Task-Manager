@@ -723,6 +723,35 @@ public class TaskController {
 	}
 
 	/**
+	 * @Title: isAssigned
+	 * @Description: 校验指定任务是否已经被分配
+	 * @param taskId 目标任务ID
+	 * @return ModelMap flag:处理成功或失败, data:指定任务是否已经被分配(true/false),
+	 *         message:处理失败消息
+	 */
+	@RequestMapping("/isAssigned")
+	@ResponseBody
+	public ModelMap isAssigned(Integer taskId) {
+		boolean flag = false;
+		String message = null;
+		Boolean data = null;
+
+		try {
+			data = taskService.isAssigned(taskId);
+			flag = true;
+		} catch (VerifyParameterException e) {
+			flag = false;
+			message = e.getMessage();
+		} catch (Exception e) {
+			flag = false;
+			message = "Verification special task status error.";
+			LOGGER.warn(message + " : " + e.getMessage(), e);
+		}
+
+		return WebUtil.getModelMap(flag, data, message);
+	}
+
+	/**
 	 * @Title: downloadAttachments
 	 * @Description: 打包下载附件
 	 * @param attachments 附件对象列表

@@ -115,7 +115,7 @@ public class TaskServiceImpl implements TaskService {
 	@Override
 	public InitTaskSearchConditionVO getInitTaskSearchCondition(Integer moduleId) {
 		InitTaskSearchConditionVO searchCondition = new InitTaskSearchConditionVO();
-		
+
 		searchCondition.setTaskStatus(Lists.newArrayList(TaskStatus.values()));
 
 		List<EntryVO<String, String>> usersInModule = Lists.newArrayList();
@@ -126,5 +126,10 @@ public class TaskServiceImpl implements TaskService {
 		}
 
 		return searchCondition;
+	}
+
+	@Override
+	public Boolean isAssigned(Integer taskId) {
+		return !(1 == taskDao.countByTaskIdAndStatus(taskId, TaskStatus.FREE));
 	}
 }
