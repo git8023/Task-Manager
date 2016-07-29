@@ -128,7 +128,7 @@ public class TaskServiceVerifier implements TaskService {
 
 			// 只能提交正在执行的任务
 			if (StringUtil.isEmpty(errMsg, true)) {
-				boolean statusOfDoing = (1 == taskDao.countByTaskIdAndStatus(taskId, TaskStatus.DOING));
+				boolean statusOfDoing = (1 == taskDao.countByTaskIdAndStatusOrNull(taskId, TaskStatus.DOING));
 				if (!statusOfDoing) {
 					errMsg = TMConstants.ACCESS_DENIED + ", Can only submit are performing tasks";
 				}

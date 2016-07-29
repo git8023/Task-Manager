@@ -16,6 +16,7 @@ $(function() {
  */
 function HomeFn() {
     var MAX_PROJECT_LENGTH = 11;
+    var TIME_FOR_SEARCH_CONDITION_ANIMATE = 500;
     var NO_RECORD_FOUND = "No Record Found";
 
     var $thisObj = this;
@@ -300,53 +301,71 @@ function HomeFn() {
             todayBtn: true,
             clearBtn: true
         };
-        var createdDateFrom = baseCtnr.find(".search_form .item input[name='createdFromDate']")
-                        .datetimepicker(dtparams);
-        var createdDateTo = baseCtnr.find(".search_form .item input[name='createdEndDate']").datetimepicker(dtparams);
+
+        var createdDateFromSelector = ".search_form .item input[name='createdFromDate']";
+        var createdDateFrom = baseCtnr.find(createdDateFromSelector).datetimepicker(dtparams);
+        var createdDateToSelector = ".search_form .item input[name='createdEndDate']";
+        var createdDateTo = baseCtnr.find(createdDateToSelector).datetimepicker(dtparams);
         setClickDateScope(createdDateTo, createdDateFrom, "setStartDate");
         setClickDateScope(createdDateFrom, createdDateTo, "setEndDate");
-        var finishDateFrom = baseCtnr.find(".search_form .item input[name='finishFromDate']").datetimepicker(dtparams);
-        var finishDateTo = baseCtnr.find(".search_form .item input[name='finishEndDate']").datetimepicker(dtparams);
+
+        var finishDateFromSelector = ".search_form .item input[name='finishFromDate']";
+        var finishDateFrom = baseCtnr.find(finishDateFromSelector).datetimepicker(dtparams);
+        var finishDateToSelector = ".search_form .item input[name='finishEndDate']";
+        var finishDateTo = baseCtnr.find(finishDateToSelector).datetimepicker(dtparams);
         setClickDateScope(finishDateTo, finishDateFrom, "setStartDate");
         setClickDateScope(finishDateFrom, finishDateTo, "setEndDate");
-        $("body").undelegate(".search_form .item .clear", "click").delegate(".search_form .item .clear", "click",
-                        function() {
-                            $(this).parent().find(".date").val("");
-                        });
-        $("body").undelegate(".min_max.min", "click").delegate(
-                        ".min_max.min",
-                        "click",
-                        function() {
-                            var $this = $(this), active = $this.attr("active");
-                            if (active) { return; }
-                            $this.attr("active", "active");
 
-                            var target = $($this.attr("target"));
-                            var tHeight = target.height() + parseInt(target.css("padding-top"))
-                                            + parseInt(target.css("padding-bottom"));
-                            target.attr("org-height", tHeight).slideUp(1000, function() {
-                                $this.removeClass("min").addClass("max").removeAttr("active");
-                            });
-                            var dg = baseCtnr.find(".tasks .data_grid");
-                            dg.animate({
-                                height: dg.height() + tHeight
-                            }, 1000);
-                        });
-        $("body").undelegate(".min_max.max", "click").delegate(".min_max.max", "click", function() {
-            var $this = $(this), active = $this.attr("active");
-            if (active) { return; }
-            $this.attr("active", "active");
-
-            var target = $($this.attr("target"));
-            var tHeight = target.attr("org-height");
-            target.slideDown(1000, function() {
-                $this.removeClass("max").addClass("min").removeAttr("active");
-            });
-            var dg = baseCtnr.find(".tasks .data_grid");
-            dg.animate({
-                height: dg.height() - tHeight
-            }, 1000);
+        var clearSelector = ".search_form .item .clear";
+        $("body").undelegate(clearSelector, "click").delegate(clearSelector, "click", function() {
+            $(this).parent().find(".date").val("");
         });
+
+        var conditionToMinSelector = ".min_max.min";
+        $("body").undelegate(conditionToMinSelector, "click")
+                        .delegate(conditionToMinSelector, "click", searchFormToMin);
+
+        var conditionToMaxSelector = ".min_max.max";
+        $("body").undelegate(conditionToMaxSelector, "click")
+                        .delegate(conditionToMaxSelector, "click", searchFormToMax);
+
+    }
+
+    // 查询表单最大化
+    function searchFormToMax() {
+        var $this = $(this), active = $this.attr("active");
+        if (active) { return; }
+        $this.attr("active", "active");
+
+        var target = $($this.attr("target"));
+        var tHeight = target.attr("org-height");
+        target.slideDown(TIME_FOR_SEARCH_CONDITION_ANIMATE, function() {
+            $this.removeClass("max").addClass("min").removeAttr("active");
+        });
+        var dg = baseCtnr.find(".tasks .data_grid");
+        dg.animate({
+            height: dg.height() - tHeight
+        }, TIME_FOR_SEARCH_CONDITION_ANIMATE);
+    }
+
+    // 查询表单最小化
+    function searchFormToMin() {
+        var $this = $(this), active = $this.attr("active");
+        if (active) { return; }
+        $this.attr("active", "active");
+
+        var target = $($this.attr("target"));
+        var tHeight = target.height();
+        tHeight += parseInt(target.css("padding-top"));
+        tHeight += parseInt(target.css("padding-bottom"));
+        target.attr("org-height", tHeight);
+        target.slideUp(TIME_FOR_SEARCH_CONDITION_ANIMATE, function() {
+            $this.removeClass("min").addClass("max").removeAttr("active");
+        });
+        var dg = baseCtnr.find(".tasks .data_grid");
+        dg.animate({
+            height: dg.height() + tHeight
+        }, TIME_FOR_SEARCH_CONDITION_ANIMATE);
     }
 
     /**

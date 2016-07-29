@@ -87,10 +87,10 @@ public interface TaskDao {
 	 * @Title: countByTaskIdAndStatus
 	 * @Description: 指定任务ID和状态查询任务数量
 	 * @param taskId 任务ID
-	 * @param taskStatus 任务状态
+	 * @param taskStatus 任务状态(等于指定值或者NULL值)
 	 * @return Integer 任务数量
 	 */
-	Integer countByTaskIdAndStatus(@Param("taskId") Integer taskId, @Param("taskStatus") TaskStatus taskStatus);
+	Integer countByTaskIdAndStatusOrNull(@Param("taskId") Integer taskId, @Param("taskStatus") TaskStatus taskStatus);
 
 	/**
 	 * @Title: updateStatusByIdAndAccount

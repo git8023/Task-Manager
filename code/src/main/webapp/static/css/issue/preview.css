@@ -1,0 +1,9 @@
+@CHARSET "UTF-8";
+
+.preview_issue_container {}
+
+.preview_issue_container .full_ctnr_dialog {}
+.preview_issue_container .full_ctnr_dialog .title {margin-bottom:10px;}
+
+.preview_issue_container .full_ctnr_dialog textarea {display:none;}
+.preview_issue_container .full_ctnr_dialog .show_container {height:120px; overflow:auto;}

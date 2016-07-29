@@ -130,6 +130,6 @@ public class TaskServiceImpl implements TaskService {
 
 	@Override
 	public Boolean isAssigned(Integer taskId) {
-		return !(1 == taskDao.countByTaskIdAndStatus(taskId, TaskStatus.FREE));
+		return !(1 == taskDao.countByTaskIdAndStatusOrNull(taskId, TaskStatus.FREE));
 	}
 }

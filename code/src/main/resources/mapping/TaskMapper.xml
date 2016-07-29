@@ -195,14 +195,16 @@
     </select>
     
     <!-- 指定任务ID和状态查询任务数量 -->
-    <select id="countByTaskIdAndStatus" resultType="int">
-        SELECT
-            count(1)
-        FROM
-            user_task
+    <select id="countByTaskIdAndStatusOrNull" resultType="int">
+        SELECT COUNT(1) 
+        FROM task
+        LEFT JOIN user_task ON user_task.task_id = task.id
         WHERE
-            user_task.task_id = #{taskId}
-            AND user_task.`status` = #{taskStatus}
+            task.id = #{taskId}
+            AND (
+                user_task.`status` IS NULL
+                OR user_task.`status` = #{taskStatus}
+            )
     </select>
     
     <!-- 更新与用户相关的任务状态 -->
